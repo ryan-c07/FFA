@@ -2,22 +2,20 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class GamePanel extends JPanel implements Runnable, MouseListener, KeyListener {
+
+public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     double FPS = 60;
 
-    int playerX = 100, playerY = 100, speed = 10;
-
+    Player player;
 
     public GamePanel(){
+        player = new Player(100, 100, 5);
         this.setPreferredSize(new Dimension(1920, 1024));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
-        this.addMouseListener(this);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
     }
@@ -49,23 +47,27 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, KeyLis
     }
     public void update(){
         if (keyHandler.up){
-            playerY -= speed;
+            player.setPlayerY(player.getPlayerY() - player.getSpeed());
+            player.changeForwardFrame();
         }
         else if (keyHandler.left){
-            playerX -= speed;
+            player.setPlayerX(player.getPlayerX() - player.getSpeed());
+            player.changeLeftFrame();
         }
         else if (keyHandler.down){
-            playerY += speed;
+            player.setPlayerY(player.getPlayerY() + player.getSpeed());
+            player.changeBackwardFrame();
         }
         else if (keyHandler.right){
-            playerX += speed;
+            player.setPlayerX(player.getPlayerX() + player.getSpeed());
+            player.changeRightFrame();
         }
     }
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g){ // repaint
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         g2.setColor(Color.white);
-        g2.fillRect(playerX, playerY, 64, 64);
+        g2.drawImage(player.getImage(), player.getPlayerX(), player.getPlayerY(), null, null);
         g2.dispose();
     }
     @Override
@@ -76,21 +78,4 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, KeyLis
 
     @Override
     public void keyReleased(KeyEvent e) {}
-
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mousePressed(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
 }
