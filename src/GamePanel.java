@@ -7,13 +7,15 @@ import java.awt.event.KeyListener;
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
+
+    Map map = new Map(0, 0, 5);
     double FPS = 60;
 
     Player player;
 
     public GamePanel(){
-        player = new Player(100, 100, 5);
-        this.setPreferredSize(new Dimension(1920, 1024));
+        player = new Player(0, 0, 100);
+        this.setPreferredSize(new Dimension(512, 512));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
@@ -47,19 +49,31 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
     public void update(){
         if (keyHandler.up){
-            player.setPlayerY(player.getPlayerY() - player.getSpeed());
+            map.y = map.y + map.speed;
+            if (keyHandler.left) {
+                map.x = map.x + map.speed;
+            }
+            else if (keyHandler.right) {
+                map.x = map.x - map.speed;
+            }
             player.changeForwardFrame();
         }
-        else if (keyHandler.left){
-            player.setPlayerX(player.getPlayerX() - player.getSpeed());
-            player.changeLeftFrame();
-        }
         else if (keyHandler.down){
-            player.setPlayerY(player.getPlayerY() + player.getSpeed());
+            map.y = map.y - map.speed;
+            if (keyHandler.left) {
+                map.x = map.x + map.speed;
+            }
+            else if (keyHandler.right) {
+                map.x = map.x - map.speed;
+            }
             player.changeBackwardFrame();
         }
+        else if (keyHandler.left){
+            map.x = map.x + map.speed;
+            player.changeLeftFrame();
+        }
         else if (keyHandler.right){
-            player.setPlayerX(player.getPlayerX() + player.getSpeed());
+            map.x = map.x - map.speed;
             player.changeRightFrame();
         }
     }
@@ -67,7 +81,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         g2.setColor(Color.white);
-        g2.drawImage(player.getImage(), player.getPlayerX(), player.getPlayerY(), null, null);
+        for (int row = 0; row < map.tiles.length; row++){
+            for (int col = 0; col < map.tiles[0].length; col++){
+                g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null,null);
+            }
+        }
+        g2.drawImage(player.getImage(), 210, 192, null, null);
         g2.dispose();
     }
     @Override

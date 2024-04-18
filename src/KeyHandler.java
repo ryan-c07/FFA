@@ -1,7 +1,9 @@
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class KeyHandler implements KeyListener{
+public class KeyHandler implements KeyListener, MouseListener {
     public boolean up, down, left, right;
     @Override
     public void keyTyped(KeyEvent e) {
@@ -40,5 +42,30 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_D){
             right = false;
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

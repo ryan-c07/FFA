@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Player {
     public BufferedImage image;
-    private int playerX, playerY, speed, hp, dmg, forwardImageNumber, backwardImageNumber, rightImageNumber, leftImageNumber;
+    private int hp, dmg, forwardImageNumber, backwardImageNumber, rightImageNumber, leftImageNumber;
     private final String IMAGE_FILE = "sprites/FORWARD/frame_15_delay-0.12s.gif";
 
     public Player(int playerX, int playerY, int speed) {
@@ -13,9 +13,6 @@ public class Player {
         backwardImageNumber = 15;
         rightImageNumber = 15;
         leftImageNumber = 15;
-        this.playerX = playerX;
-        this.playerY = playerY;
-        this.speed = speed;
         this.hp = 100;
         this.dmg = 5;
         image = loadImage(IMAGE_FILE);
@@ -75,30 +72,6 @@ public class Player {
 
     public BufferedImage getImage() {
         return image;
-    }
-
-    public int getPlayerX() {
-        return playerX;
-    }
-
-    public int getPlayerY() {
-        return playerY;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setPlayerX(int playerX) {
-        this.playerX = playerX;
-    }
-
-    public void setPlayerY(int playerY) {
-        this.playerY = playerY;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public int getForwardImageNumber() {
