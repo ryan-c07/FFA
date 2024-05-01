@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 public class KeyHandler implements KeyListener, MouseListener {
     public boolean up, down, left, right;
+    String lastDirection = "";
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -15,15 +16,19 @@ public class KeyHandler implements KeyListener, MouseListener {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_W){
             up = true;
+            lastDirection = "W";
         }
         if (code == KeyEvent.VK_A){
             left = true;
+            lastDirection = "A";
         }
         if (code == KeyEvent.VK_S){
             down = true;
+            lastDirection = "S";
         }
         if (code == KeyEvent.VK_D){
             right = true;
+            lastDirection = "D";
         }
     }
 

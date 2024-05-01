@@ -48,23 +48,43 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
     public void update(){
-        if (keyHandler.up){
-            map.y = map.y + map.speed;
-            if (keyHandler.left) {
-                map.x = map.x + map.speed;
+        if (!keyHandler.up && !keyHandler.down && !keyHandler.left && !keyHandler.right){
+            if (keyHandler.lastDirection.equals("W")){
+                player.image = player.loadImage("sprites/FORWARD/frame_15_delay-0.12s.gif");
             }
-            else if (keyHandler.right) {
-                map.x = map.x - map.speed;
+            else if (keyHandler.lastDirection.equals("S")){
+                player.image = player.loadImage("sprites/BACKWARD/frame_15_delay-0.12s.gif");
+            }
+            else if (keyHandler.lastDirection.equals("A")){
+                player.image = player.loadImage("sprites/LEFT/frame_15_delay-0.12s.gif");
+            }
+            else if (keyHandler.lastDirection.equals("D")){
+                player.image = player.loadImage("sprites/RIGHT/frame_15_delay-0.12s.gif");
+            }
+        }
+        if (keyHandler.up){
+            if (keyHandler.left) {
+                map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+            } else if (keyHandler.right) {
+                map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+            } else {
+                map.y = map.y + map.speed;
             }
             player.changeForwardFrame();
         }
         else if (keyHandler.down){
-            map.y = map.y - map.speed;
             if (keyHandler.left) {
-                map.x = map.x + map.speed;
+                map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
             }
             else if (keyHandler.right) {
-                map.x = map.x - map.speed;
+                map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+            }
+            else{
+                map.y = map.y - map.speed;
             }
             player.changeBackwardFrame();
         }
