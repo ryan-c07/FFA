@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.IOException;
 public class Tile {
     public BufferedImage image;
-    private final String IMAGE_FILE = "sprites/Tiles/grass.png";
-
-    public Tile(){
-        image = loadImage(IMAGE_FILE);
-    }
+    private String imageFile;
 
     public BufferedImage getImage() {
         return image;
@@ -23,5 +19,13 @@ public class Tile {
             System.out.println(e);
             return null;
         }
+    }
+
+    public void setImageFile(String imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public String getImageFile() {
+        return imageFile;
     }
 }
