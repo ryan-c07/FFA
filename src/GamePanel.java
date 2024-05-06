@@ -14,6 +14,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     Player player;
 
     public GamePanel(){
+        Socket socket = new Socket("", 1025)
         player = new Player(0, 0, 300);
         this.setPreferredSize(new Dimension(512, 512));
         this.setBackground(Color.BLACK);
