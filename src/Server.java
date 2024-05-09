@@ -48,7 +48,7 @@ public class Server {
             }
             String server_IP;
             server_IP = iAddress.getHostAddress();
-            System.out.println("Server IP address : " +server_IP);
+            System.out.println("Server IP address : " + server_IP);
             server.startServer();
         } catch (IOException e) {
             e.printStackTrace();

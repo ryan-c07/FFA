@@ -14,7 +14,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     Player player;
 
     public GamePanel(){
-        Socket socket = new Socket("", 1025)
         player = new Player(0, 0, 300);
         this.setPreferredSize(new Dimension(512, 512));
         this.setBackground(Color.BLACK);
@@ -54,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 player.image = player.loadImage("sprites/FORWARD/frame_15_delay-0.12s.gif");
             }
             else if (keyHandler.lastDirection.equals("S")){
-                player.image = player.loadImage("sprites/BACKWARD/frame_15_delay-0.12s.gif");
+                player.image = player.loadImage("sprites/BACKWARD/0.gif");
             }
             else if (keyHandler.lastDirection.equals("A")){
                 player.image = player.loadImage("sprites/LEFT/frame_15_delay-0.12s.gif");
@@ -144,14 +143,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
         g2.drawImage(player.getImage(), 210, 192, null, null);
-        g2.drawRect(210, 192,64,64);
-        g2.drawRect(map.x + 64,map.y + 64,2560 - 128,2560 - 128);
+//        g2.drawRect(225, 202,34,54);
+//        g2.drawRect(map.x + 64,map.y + 64,2560 - 128,2560 - 128); // visual aid
         g2.dispose();
     }
 
     public boolean checkInMap(){
-        Rectangle playerHitBox = new Rectangle(210, 192, 64, 64);
-        Rectangle mapRec = new Rectangle(map.x + 64,map.y + 64,2560 - 128,2560 - 128);
+        Rectangle playerHitBox = new Rectangle(225, 202,34,54); // player hit-box
+        Rectangle mapRec = new Rectangle(map.x + 64,map.y + 64,2560 - 128,2560 - 128); // map range
         return mapRec.contains(playerHitBox);
     }
     @Override

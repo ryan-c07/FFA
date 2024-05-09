@@ -7,64 +7,9 @@ import java.util.Scanner;
 public class Player {
     public BufferedImage image;
     private int hp, dmg, forwardImageNumber, backwardImageNumber, rightImageNumber, leftImageNumber;
-    private final String IMAGE_FILE = "sprites/FORWARD/frame_15_delay-0.12s.gif";
-    private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
+    private final String IMAGE_FILE = "sprites/BACKWARD/0.gif";
 
-    public void sendMessage() {
-        try {
-            bufferedWriter.write(username);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-
-            Scanner scanner = new Scanner(System.in);
-            while (socket.isConnected()) {
-                String messageToSend = scanner.nextLine();
-                bufferedWriter.write(username + ": " + messageToSend);
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-            }
-        } catch (IOException e) {
-            closeEverything(socket, bufferedReader, bufferedWriter);
-        }
-    }
-
-    public void listenForMessage() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String msgFromGroupChat;
-
-                while (socket.isConnected()) {
-                    try {
-                        msgFromGroupChat = bufferedReader.readLine();
-                        System.out.println(msgFromGroupChat);
-                    }catch (IOException e) {
-                        closeEverything(socket, bufferedReader, bufferedWriter);
-                    }
-                }
-            }
-        }).start();
-    }
-
-    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
-        try {
-            if (bufferedReader != null) {
-                bufferedReader.close();
-            }
-            if (bufferedWriter != null) {
-                bufferedWriter.close();
-            }
-            if (socket != null) {
-                socket.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Player(int playerX, int playerY, int speed, Socket socket) {
+    public Player(int playerX, int playerY, int speed) {
         forwardImageNumber = 15;
         backwardImageNumber = 15;
         rightImageNumber = 15;
@@ -97,9 +42,9 @@ public class Player {
     }
 
     public void changeBackwardFrame() {
-        if (backwardImageNumber >= 15 && backwardImageNumber < 24) {
+        if (backwardImageNumber >= 0 && backwardImageNumber < 9) {
             backwardImageNumber++;
-            image = loadImage("sprites/BACKWARD/frame_" + backwardImageNumber + "_delay-0.12s.gif");
+            image = loadImage("sprites/BACKWARD/" + backwardImageNumber + ".gif");
         } else if (getBackwardImageNumber() >= 24) {
             backwardImageNumber = 15;
             image = loadImage("sprites/BACKWARD/frame_" + backwardImageNumber + "_delay-0.12s.gif");

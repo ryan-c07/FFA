@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ public class Players implements Runnable{
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.clientUsername = bufferedReader.readLine();
             players.add(this);
-            broadcastMessage("SERVER: " + clientUsername + " has entered the chat!");
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
@@ -76,5 +76,9 @@ public class Players implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void drawOtherPlayers(Graphics graphics){
+
     }
 }
