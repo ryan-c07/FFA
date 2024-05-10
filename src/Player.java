@@ -32,42 +32,42 @@ public class Player {
     }
 
     public void changeForwardFrame() {
-        if (forwardImageNumber >= 15 && forwardImageNumber < 24) {
+        if (forwardImageNumber >= 0 && forwardImageNumber < 8) {
             forwardImageNumber++;
-            image = loadImage("sprites/FORWARD/frame_" + forwardImageNumber + "_delay-0.12s.gif");
-        } else if (getForwardImageNumber() >= 24) {
-            forwardImageNumber = 15;
-            image = loadImage("sprites/FORWARD/frame_" + forwardImageNumber + "_delay-0.12s.gif");
+            image = loadImage("sprites/FORWARD/" + forwardImageNumber + ".gif");
+        } else if (getForwardImageNumber() >= 8) {
+            forwardImageNumber = 0;
+            image = loadImage("sprites/FORWARD/" + forwardImageNumber + ".gif");
         }
     }
 
     public void changeBackwardFrame() {
-        if (backwardImageNumber >= 0 && backwardImageNumber < 9) {
+        if (backwardImageNumber >= 0 && backwardImageNumber < 8) {
             backwardImageNumber++;
             image = loadImage("sprites/BACKWARD/" + backwardImageNumber + ".gif");
-        } else if (getBackwardImageNumber() >= 24) {
-            backwardImageNumber = 15;
-            image = loadImage("sprites/BACKWARD/frame_" + backwardImageNumber + "_delay-0.12s.gif");
+        } else if (getBackwardImageNumber() >= 8) {
+            backwardImageNumber = 0;
+            image = loadImage("sprites/BACKWARD/" + backwardImageNumber + ".gif");
         }
     }
 
     public void changeRightFrame() {
-        if (rightImageNumber >= 15 && rightImageNumber < 23) {
+        if (rightImageNumber >= 0 && rightImageNumber < 8) {
             rightImageNumber++;
-            image = loadImage("sprites/RIGHT/frame_" + rightImageNumber + "_delay-0.12s.gif");
-        } else if (getRightImageNumber() >= 23) {
-            rightImageNumber = 15;
-            image = loadImage("sprites/RIGHT/frame_" + rightImageNumber + "_delay-0.12s.gif");
+            image = loadImage("sprites/RIGHT/" + rightImageNumber + ".gif");
+        } else if (getRightImageNumber() >= 8) {
+            rightImageNumber = 0;
+            image = loadImage("sprites/RIGHT/" + rightImageNumber + ".gif");
         }
     }
 
     public void changeLeftFrame() {
-        if (leftImageNumber >= 15 && leftImageNumber < 23) {
+        if (leftImageNumber >= 0 && leftImageNumber < 8) {
             leftImageNumber++;
-            image = loadImage("sprites/LEFT/frame_" + leftImageNumber + "_delay-0.12s.gif");
-        } else if (getLeftImageNumber() >= 23) {
-            leftImageNumber = 15;
-            image = loadImage("sprites/LEFT/frame_" + leftImageNumber + "_delay-0.12s.gif");
+            image = loadImage("sprites/LEFT/" + leftImageNumber + ".gif");
+        } else if (getLeftImageNumber() >= 8) {
+            leftImageNumber = 0;
+            image = loadImage("sprites/LEFT/" + leftImageNumber + ".gif");
         }
     }
 

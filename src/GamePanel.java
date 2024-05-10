@@ -2,15 +2,17 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import java.sql.Array;
+import java.util.ArrayList;
+import java.awt.Rectangle;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
 
-    Map map = new Map(0, 0, 5);
+    Map map = new Map(100, 100, 5);
     double FPS = 60;
-
+    ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
     Player player;
 
     public GamePanel(){
@@ -50,16 +52,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public void update(){
         if (!keyHandler.up && !keyHandler.down && !keyHandler.left && !keyHandler.right){
             if (keyHandler.lastDirection.equals("W")){
-                player.image = player.loadImage("sprites/FORWARD/frame_15_delay-0.12s.gif");
+                player.image = player.loadImage("sprites/FORWARD/0.gif");
             }
             else if (keyHandler.lastDirection.equals("S")){
                 player.image = player.loadImage("sprites/BACKWARD/0.gif");
             }
             else if (keyHandler.lastDirection.equals("A")){
-                player.image = player.loadImage("sprites/LEFT/frame_15_delay-0.12s.gif");
+                player.image = player.loadImage("sprites/LEFT/0.gif");
             }
             else if (keyHandler.lastDirection.equals("D")){
-                player.image = player.loadImage("sprites/RIGHT/frame_15_delay-0.12s.gif");
+                player.image = player.loadImage("sprites/RIGHT/0.gif");
             }
         }
         if (keyHandler.up){
@@ -75,7 +77,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             } else if (keyHandler.right) {
                 map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
-                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
                 map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
@@ -84,7 +86,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             } else {
                 map.y = map.y + map.speed;
                 if (!checkInMap()){
-                    map.y = map.y - map.speed;
+                    map.y = map.y - map.speed - 10;
                 }
             }
             player.changeForwardFrame();
@@ -143,15 +145,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
         g2.drawImage(player.getImage(), 210, 192, null, null);
-//        g2.drawRect(225, 202,34,54);
+        g2.drawRect(225, 202,34,54);
 //        g2.drawRect(map.x + 64,map.y + 64,2560 - 128,2560 - 128); // visual aid
         g2.dispose();
     }
 
     public boolean checkInMap(){
         Rectangle playerHitBox = new Rectangle(225, 202,34,54); // player hit-box
-        Rectangle mapRec = new Rectangle(map.x + 64,map.y + 64,2560 - 128,2560 - 128); // map range
-        return mapRec.contains(playerHitBox);
+        for (int row = 0; row < map.tiles.length; row++) {
+            for (int col = 0; col < map.tiles[0].length; col++) {
+                if (map.tiles[row][col] instanceof Sand) {
+                    rectangles.add(new Rectangle(map.x + 64 * row, map.y + 64 * col, 64, 64));
+                }
+            }
+        }
+        boolean contains = true;
+        for (Rectangle r : rectangles){
+            if (r.intersects(playerHitBox)){
+                contains = false;
+            }
+        }
+        return contains;
     }
     @Override
     public void keyTyped(KeyEvent e) {}
