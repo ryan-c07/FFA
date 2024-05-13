@@ -70,23 +70,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 if (!checkInMap()){
                     map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
+
                 map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
                     map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
-            } else if (keyHandler.right) {
+            }
+            else if (keyHandler.right) {
                 map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
                     map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
+
                 map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
                     map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
-            } else {
+            }
+            else {
                 map.y = map.y + map.speed;
                 if (!checkInMap()){
-                    map.y = map.y - map.speed - 10;
+                    map.y = map.y - map.speed;
                 }
             }
             player.changeForwardFrame();
@@ -97,6 +101,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 if (!checkInMap()){
                     map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
+
                 map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
                     map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
@@ -104,9 +109,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
             else if (keyHandler.right) {
                 map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap()){
+                if (!checkInMap()) {
                     map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
+
                 map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
                     map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
@@ -134,6 +140,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
             player.changeRightFrame();
         }
+        rectangles.clear();
     }
     public void paintComponent(Graphics g){ // repaint
         super.paintComponent(g);
