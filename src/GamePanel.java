@@ -10,7 +10,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
 
-    Map map = new Map(100, 100, 5);
+    Map map = new Map(146, 128, 10);
     double FPS = 60;
     ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
     Player player;
@@ -65,65 +65,44 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
         if (keyHandler.up){
+            map.y = map.y + map.speed;
+            if (!checkInMap()) {
+                map.y = map.y - map.speed - 1;
+            }
             if (keyHandler.left) {
                 map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap()){
-                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                }
-
-                map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap()){
-                    map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                if (!checkInMap()) {
+                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2)) ;
                 }
             }
-            else if (keyHandler.right) {
+
+            if (keyHandler.right) {
                 map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()){
                     map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
+            }
 
-                map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap()){
-                    map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                }
-            }
-            else {
-                map.y = map.y + map.speed;
-                if (!checkInMap()){
-                    map.y = map.y - map.speed;
-                }
-            }
             player.changeForwardFrame();
         }
         else if (keyHandler.down){
+            map.y = map.y - map.speed;
+            if (!checkInMap()){
+                map.y = map.y + map.speed + 1;
+            }
             if (keyHandler.left) {
                 map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap()){
+                if (!checkInMap()) {
                     map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
-
-                map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap()){
-                    map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                }
             }
-            else if (keyHandler.right) {
+            if (keyHandler.right) {
                 map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 if (!checkInMap()) {
                     map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
                 }
+            }
 
-                map.y = map.y - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap()){
-                    map.y = map.y + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                }
-            }
-            else{
-                map.y = map.y - map.speed;
-                if (!checkInMap()){
-                    map.y = map.y + map.speed;
-                }
-            }
             player.changeBackwardFrame();
         }
         else if (keyHandler.left){
@@ -142,6 +121,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
         rectangles.clear();
     }
+
     public void paintComponent(Graphics g){ // repaint
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
@@ -174,6 +154,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
         return contains;
     }
+
     @Override
     public void keyTyped(KeyEvent e) {}
 

@@ -23,20 +23,20 @@ public class Map extends JPanel{
 
         File f = null;
         try{
-            f = new File("MAPS/1");
+            f = new File("MAPS/2");
             Scanner s = new Scanner(f);
-            int row = 0;
+            int col = 0;
             while (s.hasNextLine()){
                 String str = s.nextLine();
                 for (int i = 0;i < str.length();i++){
                     if (str.charAt(i) == '0'){
-                        tiles[row][i] = new Sand();
+                        tiles[i][col] = new Sand();
                     }
                     if (str.charAt(i) == '1'){
-                        tiles[row][i] = new Grass();
+                        tiles[i][col] = new Grass();
                     }
                 }
-                row++;
+                col++;
             }
         }
         catch (FileNotFoundException e){
