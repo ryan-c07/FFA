@@ -1,10 +1,10 @@
 import java.awt.image.BufferedImage;
 
-public class Sand extends Tile{
+public class TopLeftCorner extends Border{
     public BufferedImage image;
-    public Sand(){
+    public TopLeftCorner(){
         super();
-        super.setImageFile("sprites/TILES/sand.png");
+        super.setImageFile("sprites/TILES/border/corner_tl.png");
         super.image = loadImage(super.getImageFile());
 
     }

@@ -1,11 +1,11 @@
 import java.awt.image.BufferedImage;
 
-public class Grass extends Tile {
+public class Floor extends Tile{
     public BufferedImage image;
-
-    public Grass(){
+    public Floor(){
         super();
-        super.setImageFile("sprites/TILES/grass.png");
+        super.setImageFile("sprites/TILES/betterfloor.png");
         super.image = loadImage(super.getImageFile());
+
     }
 }

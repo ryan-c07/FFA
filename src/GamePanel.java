@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     Player player;
 
     public GamePanel(){
-        player = new Player(0, 0, 300);
+        player = new Player(0, 0, 10);
         this.setPreferredSize(new Dimension(512, 512));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -108,14 +108,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         else if (keyHandler.left){
             map.x = map.x + map.speed;
             if (!checkInMap()){
-                map.x = map.x - map.speed;
+                map.x = map.x - map.speed - 1;
             }
             player.changeLeftFrame();
         }
         else if (keyHandler.right){
             map.x = map.x - map.speed;
             if (!checkInMap()){
-                map.x = map.x + map.speed;
+                map.x = map.x + map.speed + 1;
             }
             player.changeRightFrame();
         }
@@ -141,7 +141,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         Rectangle playerHitBox = new Rectangle(225, 202,34,54); // player hit-box
         for (int row = 0; row < map.tiles.length; row++) {
             for (int col = 0; col < map.tiles[0].length; col++) {
-                if (map.tiles[row][col] instanceof Sand) {
+                if (map.tiles[row][col] instanceof Border) {
                     rectangles.add(new Rectangle(map.x + 64 * row, map.y + 64 * col, 64, 64));
                 }
             }
