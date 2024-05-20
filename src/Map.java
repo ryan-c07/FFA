@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class Map extends JPanel{
-    public Tile[][] tiles = new Tile[40][40];
+    public Tile[][] tiles = new Tile[44][65];
     public int x, y, speed; // make private
 
     public Map(int x, int y, int speed){
@@ -14,13 +14,6 @@ public class Map extends JPanel{
     }
 
     public void fillTiles(){
-//        for (int row = 0; row < tiles.length; row++){
-//            for (int col = 0; col < tiles[0].length; col++){
-//                tiles[row][col] = new Tile();
-//            }
-//        }
-
-
         File f = null;
         try{
             f = new File("MAPS/4");
@@ -29,29 +22,44 @@ public class Map extends JPanel{
             while (s.hasNextLine()){
                 String str = s.nextLine();
                 for (int i = 0;i < str.length();i++){
-                    if (i == 0 && col == 0){
-                        tiles[i][col] = new TopLeftCorner();
+                    if (str.charAt(i) == '('){
+                        tiles[i][col] = new Border("tl");
                     }
-                    else if (i == 0 && col == 39){
-                        tiles[i][col] = new BottomLeftCorner();
+                    else if (str.charAt(i) == '<'){
+                        tiles[i][col] = new Border("bl");
                     }
-                    else if (i == 39 && col == 0){
-                        tiles[i][col] = new TopRightCorner();
+                    else if (str.charAt(i) == ')'){
+                        tiles[i][col] = new Border("tr");
                     }
-                    else if (i == 39 && col == 39){
-                        tiles[i][col] = new BottomRightCorner();
+                    else if (str.charAt(i) == '>'){
+                        tiles[i][col] = new Border("br");
                     }
                     else if (str.charAt(i) == '0'){
-                        tiles[i][col] = new VerticalBorder();
+                        tiles[i][col] = new Border("v");
                     }
                     else if (str.charAt(i) == '1'){
-                        tiles[i][col] = new HorizontalBorder();
+                        tiles[i][col] = new Border("h");
                     }
                     else if (str.charAt(i) == '2'){
                         tiles[i][col] = new Floor();
                     }
                     else if (str.charAt(i) == '3'){
-                        tiles[i][col] = new ThreeDimensional();
+                        tiles[i][col] = new Border("3D");
+                    }
+                    else if (str.charAt(i) == 'B'){
+                        tiles[i][col] = new Background();
+                    }
+                    else if (str.charAt(i) == 'B'){
+                        tiles[i][col] = new Background();
+                    }
+                    else if (str.charAt(i) == 'B'){
+                        tiles[i][col] = new Background();
+                    }
+                    else if (str.charAt(i) == 'B'){
+                        tiles[i][col] = new Background();
+                    }
+                    else if (str.charAt(i) == 'B'){
+                        tiles[i][col] = new Background();
                     }
                 }
                 col++;

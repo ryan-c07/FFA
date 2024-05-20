@@ -1,10 +1,10 @@
 import java.awt.image.BufferedImage;
 
-public class TopLeftCorner extends Border{
+public class Background extends Tile{
     public BufferedImage image;
-    public TopLeftCorner(){
+    public Background(){
         super();
-        super.setImageFile("sprites/TILES/border/corner_tl.png");
+        super.setImageFile("sprites/TILES/background.png");
         super.image = loadImage(super.getImageFile());
 
     }
