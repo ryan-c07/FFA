@@ -1,16 +1,15 @@
-import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Players implements Runnable{
-
-    public static ArrayList<Players> players = new ArrayList<>();
+public class ClientHandler {
+// give x y of current player / using client
+    public static ArrayList<ClientHandler> players = new ArrayList<>();
     private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
 
-    public Players(Socket socket) {
+    public ClientHandler(Socket socket) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -21,11 +20,20 @@ public class Players implements Runnable{
         }
     }
 
-    @Override
-    //Continues listening for messages in thread
-    //Two threads: one for reading messages, one for everything else
-    public void run() {
+    public void getMovement(){ // gets movement from other ppl / reads it
+        new Thread(new Runnable(){
+            public void run(){
 
+            }
+        }).start();
+    }
+    public void setMovement(String ){ // sets movement / writes it
+        try{
+            bufferedWriter.write();
+        }
+        catch(IOException e){
+            closeEverything(socket, bufferedReader, bufferedWriter);
+        }
     }
     public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
         try {
@@ -42,4 +50,5 @@ public class Players implements Runnable{
             e.printStackTrace();
         }
     }
+
 }

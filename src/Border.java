@@ -28,6 +28,10 @@ public class Border extends Tile{
             super.setImageFile("sprites/TILES/vertical.png");
             super.image = loadImage(super.getImageFile());
         }
+        else if (side.equals("3D")){
+            super.setImageFile("sprites/TILES/border/3D.png");
+            super.image = loadImage(super.getImageFile());
+        }
         else if (side.equals("dt")){
             super.setImageFile("sprites/TILES/border/topdeadend.png");
             super.image = loadImage(super.getImageFile());

@@ -14,10 +14,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     double FPS = 60;
     ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
     Player player;
+    ArrayList<OtherPlayers> otherPlayers = new ArrayList<OtherPlayers>();
 
     public GamePanel(){
         player = new Player(0, 0, 10);
-        this.setPreferredSize(new Dimension(1920, 1080));
+        this.setPreferredSize(new Dimension(512, 512));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
@@ -120,7 +121,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             player.changeRightFrame();
         }
         rectangles.clear();
-        System.out.println("X = " + map.getX() + ", Y = " + map.getY()); // test
+//        System.out.println("X = " + map.getX() + ", Y = " + map.getY()); // test
     }
 
     public void paintComponent(Graphics g){ // repaint
@@ -134,7 +135,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
         g2.drawImage(player.getImage(), 210, 192, null, null);
         g2.drawRect(225, 202,34,54);
-//        g2.drawRect(map.x + 64,map.y + 64,2560 - 128,2560 - 128); // visual aid
         g2.dispose();
     }
 

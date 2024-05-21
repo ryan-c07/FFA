@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class Map extends JPanel{
-    public Tile[][] tiles = new Tile[44][65];
+    public Tile[][] tiles = new Tile[44][69];
     public int x, y, speed; // make private
 
     public Map(int x, int y, int speed){
@@ -46,17 +46,17 @@ public class Map extends JPanel{
                     else if (str.charAt(i) == '3'){
                         tiles[i][col] = new Border("3D");
                     }
-                    else if (str.charAt(i) == 'B'){
-                        tiles[i][col] = new Background();
+                    else if (str.charAt(i) == 'W'){
+                        tiles[i][col] = new Border("dt");
                     }
-                    else if (str.charAt(i) == 'B'){
-                        tiles[i][col] = new Background();
+                    else if (str.charAt(i) == 'A'){
+                        tiles[i][col] = new Border("dl");
                     }
-                    else if (str.charAt(i) == 'B'){
-                        tiles[i][col] = new Background();
+                    else if (str.charAt(i) == 'S'){
+                        tiles[i][col] = new Border("dd");
                     }
-                    else if (str.charAt(i) == 'B'){
-                        tiles[i][col] = new Background();
+                    else if (str.charAt(i) == 'D'){
+                        tiles[i][col] = new Border("dr");
                     }
                     else if (str.charAt(i) == 'B'){
                         tiles[i][col] = new Background();

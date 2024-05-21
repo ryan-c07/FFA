@@ -15,7 +15,7 @@ public class GameFrame extends JFrame{
         window.add(gamePanel);
         window.addKeyListener(gamePanel);
         window.pack();
-        window.setSize(1920, 1080); // 512 512
+        window.setSize(512, 512); // 512 512
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         gamePanel.startGameThread();
