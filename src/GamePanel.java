@@ -9,15 +9,13 @@ import java.awt.Rectangle;
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
-
-    Map map = new Map(-15, -42, 10);
+    Player player = new Player();;
+    Map map = new Map(player.getX(), player.getY(), 10);
     double FPS = 60;
     ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
-    Player player;
     ArrayList<OtherPlayers> otherPlayers = new ArrayList<OtherPlayers>();
 
     public GamePanel(){
-        player = new Player(0, 0, 10);
         this.setPreferredSize(new Dimension(512, 512));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -120,8 +118,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
             player.changeRightFrame();
         }
+        player.setY(map.y);
+        player.setX(map.x);
         rectangles.clear();
 //        System.out.println("X = " + map.getX() + ", Y = " + map.getY()); // test
+//        System.out.println("X = " + player.getX() + ", Y = " + player.getY()); // test
+
     }
 
     public void paintComponent(Graphics g){ // repaint
@@ -132,6 +134,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             for (int col = 0; col < map.tiles[0].length; col++){
                 g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null,null);
             }
+        }
+        for (int i = 0;i < otherPlayers.size(); i++){
+            g2.drawImage(otherPlayers.get(i).getImage(), otherPlayers.get(i).getX(), otherPlayers.get(i).getY(), null, null);
         }
         g2.drawImage(player.getImage(), 210, 192, null, null);
         g2.drawRect(225, 202,34,54);

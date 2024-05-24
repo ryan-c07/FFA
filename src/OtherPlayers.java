@@ -1,15 +1,29 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class OtherPlayers {
     private int x;
     private int y;
 
-    private String image;
+    private BufferedImage image;
 
     public OtherPlayers(int x, int y, String image){
         this.x = x;
         this.y = y;
-        this.image = image;
+        this.image = loadImage(image);
     }
-
+    public BufferedImage loadImage(String fileName) {
+        try {
+            BufferedImage image;
+            image = ImageIO.read(new File(fileName));
+            return image;
+        } catch (IOException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
     public int getX() {
         return x;
     }
@@ -26,11 +40,11 @@ public class OtherPlayers {
         this.y = y;
     }
 
-    public String getImage() {
+    public BufferedImage getImage() {
         return image;
     }
 
     public void setImage(String image) {
-        this.image = image;
+        this.image = loadImage(image);
     }
 }

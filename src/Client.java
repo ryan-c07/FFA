@@ -1,6 +1,8 @@
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.Buffer;
 import java.util.Scanner;
 
 public class Client{
@@ -27,6 +29,30 @@ public class Client{
         }
     }
 
+    public void getMovement(){ // gets movement from other ppl / reads it
+        new Thread(new Runnable(){
+            public void run(){
+                try{
+                    String line = bufferedReader.readLine();
+                    x = Integer.parseInt(line.substring(line.indexOf("X:") + 1, line.indexOf("Y")));
+                    y = Integer.parseInt(line.substring(line.indexOf("Y:") + 1, line.indexOf("I")));
+                    image = line.substring(line.indexOf("IMAGE:") + 1);
+                }
+                catch(IOException e){
+                    System.out.println("UNABLE TO READ OTHER PLAYERS MOVEMENT");
+                    closeEverything(socket, bufferedReader, bufferedWriter);
+                }
+            }
+        }).start();
+    }
+    public void setMovement(String lineOfMovement){ // sets movement / writes it
+        try{
+            bufferedWriter.write("X:" + x + "Y:" + y + "IMAGE:" + image);
+        }
+        catch(IOException e){
+            closeEverything(socket, bufferedReader, bufferedWriter);
+        }
+    }
     public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
         try {
             if (bufferedReader != null) {
