@@ -169,4 +169,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {}
+
+    public Map getMap() {
+        return map;
+    }
+    public Player getPlayer(){
+        return player;
+    }
+
+    public ArrayList<OtherPlayers> getOtherPlayers() {
+        return otherPlayers;
+    }
+
+    public void setOtherPlayers(ArrayList<OtherPlayers> otherPlayers) {
+        this.otherPlayers = otherPlayers;
+    }
 }

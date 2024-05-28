@@ -7,9 +7,11 @@ public class OtherPlayers {
     private int x;
     private int y;
 
+    private String username;
     private BufferedImage image;
 
-    public OtherPlayers(int x, int y, String image){
+    public OtherPlayers(int x, int y, String image, String username){
+        this.username = username;
         this.x = x;
         this.y = y;
         this.image = loadImage(image);
@@ -46,5 +48,9 @@ public class OtherPlayers {
 
     public void setImage(String image) {
         this.image = loadImage(image);
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

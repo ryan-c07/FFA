@@ -20,4 +20,8 @@ public class GameFrame extends JFrame{
         window.setVisible(true);
         gamePanel.startGameThread();
     }
+
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
 }
