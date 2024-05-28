@@ -8,7 +8,7 @@ public class FFARunner {
     public static void main(String[] args) {
         frame = new GameFrame();
         try {
-            client = new Client(new Socket("", 1025), frame.getGamePanel());
+            client = new Client(new Socket("10.8.36.134", 1025), frame.getGamePanel());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

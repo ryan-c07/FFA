@@ -11,7 +11,7 @@ public class GameFrame extends JFrame{
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("FFA");
-        GamePanel gamePanel = new GamePanel();
+        this.gamePanel = new GamePanel();
         window.add(gamePanel);
         window.addKeyListener(gamePanel);
         window.pack();
