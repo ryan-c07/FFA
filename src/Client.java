@@ -14,7 +14,7 @@ public class Client{
     private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
-    private  ArrayList<OtherPlayers> others = new ArrayList<>();
+    private ArrayList<OtherPlayers> others = new ArrayList<>();
 
     public Client(Socket socket, GamePanel panel) {
         try {

@@ -20,10 +20,10 @@ public class ClientHandler implements Runnable{
             this.username = username;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line = bufferedReader.readLine();
-            x = Integer.parseInt(line.substring(line.indexOf("X:") + 1, line.indexOf("Y")));
-            y = Integer.parseInt(line.substring(line.indexOf("Y:") + 1, line.indexOf("I")));
-            image = line.substring(line.indexOf("IMAGE:") + 1);
+            nextLine = bufferedReader.readLine();
+            x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 1, nextLine.indexOf("Y")));
+            y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 1, nextLine.indexOf("I")));
+            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 1, nextLine.indexOf("U"));
             clientHandlers.add(this);
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
@@ -33,22 +33,23 @@ public class ClientHandler implements Runnable{
 
     public void run() {
         while (socket.isConnected()) {
-            readFromClient();
-            writeToClientHandlers(nextLine);
+            try{
+                writeToClientHandlers(nextLine);
+                readFromClient();
+            }
+            catch(IOException e){
+                System.out.println("Client disconnected!");
+                closeEverything(socket, bufferedReader, bufferedWriter);
+                break;
+            }
         }
     }
 
-    public void readFromClient(){ // gets movement from other ppl / reads it
-        try{
+    public void readFromClient() throws IOException { // gets movement from other ppl / reads it
             nextLine = bufferedReader.readLine();
             x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 1, nextLine.indexOf("Y")));
             y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 1, nextLine.indexOf("I")));
-            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 1);
-        }
-        catch(IOException e){
-            System.out.println("UNABLE TO READ OTHER PLAYERS MOVEMENT");
-            closeEverything(socket, bufferedReader, bufferedWriter);
-        }
+            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 1, nextLine.indexOf("U"));
     }
 
     public void writeToClientHandlers(String lineOfMovement){ // sets movement / writes it
@@ -62,6 +63,7 @@ public class ClientHandler implements Runnable{
                 }
             }
             catch (IOException e) {
+                System.out.println("test");
                 closeEverything(socket, bufferedReader, bufferedWriter);
             }
         }
