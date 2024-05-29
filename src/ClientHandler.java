@@ -23,7 +23,7 @@ public class ClientHandler implements Runnable{
             nextLine = bufferedReader.readLine();
             x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 2, nextLine.indexOf("Y")));
             y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 2, nextLine.indexOf("I")));
-            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6, nextLine.indexOf("U"));
+            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6);
             clientHandlers.add(this);
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
@@ -49,7 +49,7 @@ public class ClientHandler implements Runnable{
             nextLine = bufferedReader.readLine();
             x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 2, nextLine.indexOf("Y")));
             y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 2, nextLine.indexOf("I")));
-            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6, nextLine.indexOf("U"));
+            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6);
     }
 
     public void writeToClientHandlers(String lineOfMovement){ // sets movement / writes it

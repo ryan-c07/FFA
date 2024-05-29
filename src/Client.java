@@ -15,6 +15,7 @@ public class Client {
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private ArrayList<OtherPlayers> others = new ArrayList<>();
+    private String previousLine;
 
     public Client(Socket socket, GamePanel panel) {
         try {
@@ -58,8 +59,14 @@ public class Client {
     public void writeToClientHandler(Map map, Player player){ // sets movement / writes it
         while(socket.isConnected()) {
             try {
-                bufferedWriter.write("X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile);
-                System.out.println("X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile);
+                String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile;
+                if (!tempLine.equals(previousLine)) {
+                    System.out.println(tempLine);
+                    previousLine = tempLine;
+                    bufferedWriter.write(tempLine);
+                    bufferedWriter.newLine();
+                    bufferedWriter.flush();
+                }
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
             }
