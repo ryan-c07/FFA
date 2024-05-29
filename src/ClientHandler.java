@@ -9,9 +9,6 @@ public class ClientHandler implements Runnable{
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private String username;
-    private int x;
-    private int y;
-    private String image;
     private String nextLine;
 
     public ClientHandler(Socket socket, String username) {
@@ -21,10 +18,6 @@ public class ClientHandler implements Runnable{
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             nextLine = bufferedReader.readLine();
-            x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 2, nextLine.indexOf("Y")));
-            y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 2, nextLine.indexOf("I")));
-            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6);
-            clientHandlers.add(this);
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
@@ -34,8 +27,8 @@ public class ClientHandler implements Runnable{
     public void run() {
         while (socket.isConnected()) {
             try{
-                writeToClientHandlers(nextLine);
                 readFromClient();
+                writeToClientHandlers(nextLine);
             }
             catch(IOException e){
                 System.out.println("Client disconnected!");
@@ -47,15 +40,15 @@ public class ClientHandler implements Runnable{
 
     public void readFromClient() throws IOException { // gets movement from other ppl / reads it
             nextLine = bufferedReader.readLine();
-            x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 2, nextLine.indexOf("Y")));
-            y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 2, nextLine.indexOf("I")));
-            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6);
+            System.out.println("Read: " + nextLine);
+        System.out.println(clientHandlers.size());
     }
 
     public void writeToClientHandlers(String lineOfMovement){ // sets movement / writes it
         for (ClientHandler clientHandler : clientHandlers) {
             try {
-                if (!clientHandler.username.equals(username)) {
+                if (!clientHandler.username.equals(this.username)) {
+                    System.out.println("Sent: " + lineOfMovement);
                     clientHandler.bufferedWriter.write(lineOfMovement + "USERNAME:" + username);
                     clientHandler.bufferedWriter.newLine();
                     //manually sent the data in buffer over
@@ -88,17 +81,5 @@ public class ClientHandler implements Runnable{
     }
     public void removeClientHandler() {
         clientHandlers.remove(this);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String getImage() {
-        return image;
     }
 }

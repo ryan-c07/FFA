@@ -32,10 +32,10 @@ public class Client {
         while (socket.isConnected()) {
             try {
                 String line = bufferedReader.readLine();
-                int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 1, line.indexOf("Y")));
-                int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 1, line.indexOf("I")));
-                String image = line.substring(line.indexOf("IMAGE:") + 1, line.indexOf("U"));
-                String username = line.substring(line.indexOf("USERNAME:") + 1);
+                int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 2, line.indexOf("Y")));
+                int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 2, line.indexOf("I")));
+                String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("U"));
+                String username = line.substring(line.indexOf("USERNAME:") + 9);
                 boolean playerAlreadyExists = false;
                 for (int i = 0; i < panel.getOtherPlayers().size(); i++) {
                     if (panel.getOtherPlayers().get(i).getUsername().equals(username)) {
@@ -61,7 +61,7 @@ public class Client {
             try {
                 String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile;
                 if (!tempLine.equals(previousLine)) {
-                    System.out.println(tempLine);
+                    //System.out.println(tempLine);
                     previousLine = tempLine;
                     bufferedWriter.write(tempLine);
                     bufferedWriter.newLine();
