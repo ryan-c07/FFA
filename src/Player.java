@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Player {
     public BufferedImage image;
     private int x, y, forwardImageNumber, backwardImageNumber, rightImageNumber, leftImageNumber;
-    private final String IMAGE_FILE = "sprites/BACKWARD/0.gif";
+    public String imageFile = "sprites/BACKWARD/0.gif";
 
     public Player() {
         forwardImageNumber = 15;
@@ -16,7 +16,7 @@ public class Player {
         leftImageNumber = 15;
         x = -15;
         y = -42;
-        image = loadImage(IMAGE_FILE);
+        image = loadImage(imageFile);
     }
 
     public void setX(int x) {
@@ -49,40 +49,48 @@ public class Player {
     public void changeForwardFrame() {
         if (forwardImageNumber >= 0 && forwardImageNumber < 8) {
             forwardImageNumber++;
-            image = loadImage("sprites/FORWARD/" + forwardImageNumber + ".gif");
+            imageFile = "sprites/FORWARD/" + forwardImageNumber + ".gif";
+            image = loadImage(imageFile);
         } else if (getForwardImageNumber() >= 8) {
             forwardImageNumber = 0;
-            image = loadImage("sprites/FORWARD/" + forwardImageNumber + ".gif");
+            imageFile = "sprites/FORWARD/" + forwardImageNumber + ".gif";
+            image = loadImage(imageFile);
         }
     }
 
     public void changeBackwardFrame() {
         if (backwardImageNumber >= 0 && backwardImageNumber < 8) {
             backwardImageNumber++;
-            image = loadImage("sprites/BACKWARD/" + backwardImageNumber + ".gif");
+            imageFile = "sprites/BACKWARD/" + backwardImageNumber + ".gif";
+            image = loadImage(imageFile);
         } else if (getBackwardImageNumber() >= 8) {
             backwardImageNumber = 0;
-            image = loadImage("sprites/BACKWARD/" + backwardImageNumber + ".gif");
+            imageFile = "sprites/BACKWARD/" + backwardImageNumber + ".gif";
+            image = loadImage(imageFile);
         }
     }
 
     public void changeRightFrame() {
         if (rightImageNumber >= 0 && rightImageNumber < 8) {
             rightImageNumber++;
-            image = loadImage("sprites/RIGHT/" + rightImageNumber + ".gif");
+            imageFile = "sprites/RIGHT/" + rightImageNumber + ".gif";
+            image = loadImage(imageFile);
         } else if (getRightImageNumber() >= 8) {
             rightImageNumber = 0;
-            image = loadImage("sprites/RIGHT/" + rightImageNumber + ".gif");
+            imageFile = "sprites/RIGHT/" + rightImageNumber + ".gif";
+            image = loadImage(imageFile);
         }
     }
 
     public void changeLeftFrame() {
         if (leftImageNumber >= 0 && leftImageNumber < 8) {
             leftImageNumber++;
-            image = loadImage("sprites/LEFT/" + leftImageNumber + ".gif");
+            imageFile = "sprites/LEFT/" + leftImageNumber + ".gif";
+            image = loadImage(imageFile);
         } else if (getLeftImageNumber() >= 8) {
             leftImageNumber = 0;
-            image = loadImage("sprites/LEFT/" + leftImageNumber + ".gif");
+            imageFile = "sprites/LEFT/" + leftImageNumber + ".gif";
+            image = loadImage(imageFile);
         }
     }
 

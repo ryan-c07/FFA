@@ -21,9 +21,9 @@ public class ClientHandler implements Runnable{
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             nextLine = bufferedReader.readLine();
-            x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 1, nextLine.indexOf("Y")));
-            y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 1, nextLine.indexOf("I")));
-            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 1, nextLine.indexOf("U"));
+            x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 2, nextLine.indexOf("Y")));
+            y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 2, nextLine.indexOf("I")));
+            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6, nextLine.indexOf("U"));
             clientHandlers.add(this);
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
@@ -47,9 +47,9 @@ public class ClientHandler implements Runnable{
 
     public void readFromClient() throws IOException { // gets movement from other ppl / reads it
             nextLine = bufferedReader.readLine();
-            x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 1, nextLine.indexOf("Y")));
-            y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 1, nextLine.indexOf("I")));
-            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 1, nextLine.indexOf("U"));
+            x = Integer.parseInt(nextLine.substring(nextLine.indexOf("X:") + 2, nextLine.indexOf("Y")));
+            y = Integer.parseInt(nextLine.substring(nextLine.indexOf("Y:") + 2, nextLine.indexOf("I")));
+            image = nextLine.substring(nextLine.indexOf("IMAGE:") + 6, nextLine.indexOf("U"));
     }
 
     public void writeToClientHandlers(String lineOfMovement){ // sets movement / writes it
