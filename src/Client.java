@@ -29,32 +29,37 @@ public class Client {
     }
 
     public void readFromClientHandler() { // gets movement from other ppl / reads it
-        while (socket.isConnected()) {
-            try {
-                String line = bufferedReader.readLine();
-                int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 2, line.indexOf("Y")));
-                int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 2, line.indexOf("I")));
-                String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("U"));
-                String username = line.substring(line.indexOf("USERNAME:") + 9);
-                boolean playerAlreadyExists = false;
-                for (int i = 0; i < panel.getOtherPlayers().size(); i++) {
-                    if (panel.getOtherPlayers().get(i).getUsername().equals(username)) {
-                        panel.getOtherPlayers().get(i).setX(temp_x);
-                        panel.getOtherPlayers().get(i).setY(temp_y);
-                        panel.getOtherPlayers().get(i).setImage(image);
-                        playerAlreadyExists = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (socket.isConnected()) {
+                    try {
+                        String line = bufferedReader.readLine();
+                        int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 2, line.indexOf("Y")));
+                        int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 2, line.indexOf("I")));
+                        String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("U"));
+                        String username = line.substring(line.indexOf("USERNAME:") + 9);
+                        boolean playerAlreadyExists = false;
+                        for (int i = 0; i < panel.getOtherPlayers().size(); i++) {
+                            if (panel.getOtherPlayers().get(i).getUsername().equals(username)) {
+                                panel.getOtherPlayers().get(i).setX(temp_x);
+                                panel.getOtherPlayers().get(i).setY(temp_y);
+                                panel.getOtherPlayers().get(i).setImage(image);
+                                playerAlreadyExists = true;
+                            }
+                        }
+                        if (!playerAlreadyExists) {
+                            OtherPlayers newPlayer = new OtherPlayers(temp_x, temp_y, image, username);
+                            panel.getOtherPlayers().add(newPlayer);
+                        }
+                        System.out.println("check");
+                    } catch (IOException e) {
+                        System.out.println("UNABLE TO READ OTHER PLAYERS MOVEMENT");
+                        closeEverything(socket, bufferedReader, bufferedWriter);
                     }
                 }
-                if (!playerAlreadyExists) {
-                    OtherPlayers newPlayer = new OtherPlayers(temp_x, temp_y, image, username);
-                    panel.getOtherPlayers().add(newPlayer);
-                }
-                System.out.println("check");
-            } catch (IOException e) {
-                System.out.println("UNABLE TO READ OTHER PLAYERS MOVEMENT");
-                closeEverything(socket, bufferedReader, bufferedWriter);
             }
-        }
+        }).start();
     }
     public void writeToClientHandler(Map map, Player player){ // sets movement / writes it
         while(socket.isConnected()) {
