@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Player {
     public BufferedImage image;
     private int x, y, forwardImageNumber, backwardImageNumber, rightImageNumber, leftImageNumber;
+    private boolean hasPotato, isDead;
     public String imageFile = "sprites/BACKWARD/0.gif";
 
     public Player() {
@@ -14,8 +15,8 @@ public class Player {
         backwardImageNumber = 15;
         rightImageNumber = 15;
         leftImageNumber = 15;
-        x = -15;
-        y = -42;
+        x = 210;
+        y = 192;
         image = loadImage(imageFile);
     }
 
@@ -33,6 +34,22 @@ public class Player {
 
     public int getY() {
         return y;
+    }
+
+    public boolean isHasPotato() {
+        return hasPotato;
+    }
+
+    public void setHasPotato(boolean hasPotato) {
+        this.hasPotato = hasPotato;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
     }
 
     public BufferedImage loadImage(String fileName) {

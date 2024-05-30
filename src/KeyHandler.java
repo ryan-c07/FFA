@@ -4,7 +4,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
 public class KeyHandler implements KeyListener, MouseListener {
-    public boolean up, down, left, right;
+    public boolean up, down, left, right, shift;
     String lastDirection = "";
     @Override
     public void keyTyped(KeyEvent e) {
@@ -30,6 +30,9 @@ public class KeyHandler implements KeyListener, MouseListener {
             right = true;
             lastDirection = "D";
         }
+        if (code == KeyEvent.VK_SHIFT){
+            shift = true;
+        }
     }
 
     @Override
@@ -46,6 +49,9 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_D){
             right = false;
+        }
+        if (code == KeyEvent.VK_SHIFT){
+            shift = false;
         }
     }
 

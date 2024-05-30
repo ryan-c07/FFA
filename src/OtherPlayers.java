@@ -8,6 +8,7 @@ public class OtherPlayers {
     private int y;
     private String username;
     private BufferedImage image;
+    private boolean hasPotato, isDead;
 
     public OtherPlayers(int x, int y, String image, String username){
         this.username = username;

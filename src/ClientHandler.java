@@ -40,15 +40,15 @@ public class ClientHandler implements Runnable{
 
     public void readFromClient() throws IOException { // gets movement from other ppl / reads it
             nextLine = bufferedReader.readLine();
-            System.out.println("Read: " + nextLine);
-        System.out.println(clientHandlers.size());
+//            System.out.println("Read: " + nextLine);
+//        System.out.println(clientHandlers.size());
     }
 
     public void writeToClientHandlers(String lineOfMovement){ // sets movement / writes it
         for (ClientHandler clientHandler : clientHandlers) {
             try {
                 if (!clientHandler.username.equals(this.username)) {
-                    System.out.println("Sent: " + lineOfMovement);
+//                    System.out.println("Sent: " + lineOfMovement);
                     clientHandler.bufferedWriter.write(lineOfMovement + "USERNAME:" + username);
                     clientHandler.bufferedWriter.newLine();
                     //manually sent the data in buffer over
