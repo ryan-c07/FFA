@@ -10,7 +10,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     Player player = new Player();;
-    Map map = new Map(player.getX(), player.getY(), 10);
+    Map map = new Map(player.getX(), player.getY(), 8);
     double FPS = 60;
     ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
     ArrayList<OtherPlayers> otherPlayers = new ArrayList<OtherPlayers>();
@@ -136,7 +136,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
         for (int i = 0;i < otherPlayers.size(); i++){
-            g2.drawImage(otherPlayers.get(i).getImage(), - otherPlayers.get(i).getX() + 195, - otherPlayers.get(i).getY() + 150, null, null);
+            g2.drawImage(otherPlayers.get(i).getImage(), map.x - otherPlayers.get(i).getX() + 210, map.y - otherPlayers.get(i).getY() + 192, null, null);
         }
         g2.drawImage(player.getImage(), 210, 192, null, null);
         g2.drawRect(225, 202,34,54);
