@@ -136,7 +136,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
         for (int i = 0;i < otherPlayers.size(); i++){
-            g2.drawImage(otherPlayers.get(i).getImage(), otherPlayers.get(i).getX(), otherPlayers.get(i).getY(), null, null);
+            g2.drawImage(otherPlayers.get(i).getImage(), - otherPlayers.get(i).getX() + 195, - otherPlayers.get(i).getY() + 150, null, null);
         }
         g2.drawImage(player.getImage(), 210, 192, null, null);
         g2.drawRect(225, 202,34,54);

@@ -12,7 +12,7 @@ public class FFARunner {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        // client.readFromClientHandler();
+        client.readFromClientHandler();
         client.writeToClientHandler(frame.getGamePanel().getMap(), frame.getGamePanel().getPlayer());
     }
 

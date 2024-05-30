@@ -6,7 +6,6 @@ import java.io.IOException;
 public class OtherPlayers {
     private int x;
     private int y;
-
     private String username;
     private BufferedImage image;
 
