@@ -12,7 +12,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     Player player = new Player();
     Map map = new Map(0, 0, 2);
     double FPS = 60;
-    ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
+    ArrayList<Rectangle> borderRectangles = new ArrayList<Rectangle>();
     ArrayList<Rectangle> otherPlayersHitBoxes = new ArrayList<Rectangle>();
     ArrayList<OtherPlayers> otherPlayers = new ArrayList<OtherPlayers>();
 
@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         spawnInRandomLocation();
+
     }
 
     public void startGameThread(){
@@ -158,9 +159,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         if (!keyHandler.shift){
             map.speed = 2;
         }
-        rectangles.clear();
+        borderRectangles.clear();
         otherPlayersHitBoxes.clear();
-//        System.out.println("X = " + map.getX() + ", Y = " + map.getY()); // test
+        System.out.println("MAP : " + "X = " + map.getX() + ", Y = " + map.getY()); // test
     }
 
     public void paintComponent(Graphics g){ // repaint
@@ -170,6 +171,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         for (int row = 0; row < map.tiles.length; row++){
             for (int col = 0; col < map.tiles[0].length; col++){
                 g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null,null);
+                if (map.tiles[row][col] instanceof Border){
+                    g2.drawRect(map.x + 64 * row, map.y + 64 * col, 64, 64);
+
+                }
             }
         }
         for (int i = 0;i < otherPlayers.size(); i++){
@@ -180,22 +185,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g2.drawRect(player.getX() + 15, player.getY() + 10, 34,54);
         g2.dispose();
     }
-
     public boolean checkInMap(Rectangle hitBox){
         for (int row = 0; row < map.tiles.length; row++) {
             for (int col = 0; col < map.tiles[0].length; col++) {
                 if (map.tiles[row][col] instanceof Border) {
-                    rectangles.add(new Rectangle(map.x + 64 * row, map.y + 64 * col, 64, 64));
+                    borderRectangles.add(new Rectangle(map.x + 64 * row, map.y + 64 * col, 64, 64));
                 }
             }
         }
-        boolean contains = true;
-        for (Rectangle r : rectangles){
-            if (r.intersects(hitBox)){
-                contains = false;
+        for (Rectangle r : borderRectangles) {
+            if (hitBox.intersects(r)) {
+                return false;
             }
         }
-        return contains;
+        return true;
     }
 
     public boolean checkPlayerIntersects(Rectangle hitBox){
@@ -210,21 +213,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
         return contains;
     }
-
     public void spawnInRandomLocation(){
-        int x = (int) (Math.random() * 2816);
-        int y = (int) (Math.random() * 4416);
-        boolean valid = false;
-        while (!valid){
-            if (checkInMap(new Rectangle(x + 15,y + 10, 34, 54)) ){ // && checkPlayerIntersects(new Rectangle(x + 15,y + 10, 34, 54))
-                player.setX(x);
-                player.setY(y);
-                valid = true;
+        int x = (int) ((Math.random() * 2330) - 2425);
+        int y = (int) ((Math.random() * 4618) - 4027);
+        while (true){
+            System.out.println(!checkInMap(new Rectangle(x + 15 + player.getX(),y + 10 + player.getY(), 34, 54)));
+            if (checkInMap(new Rectangle(player.getX(),player.getY(), 34, 54))){
+                map.x = x;
+                map.y = y;
+                break;
             }
-            else{
-                x = (int) (Math.random() * 2816);
-                y = (int) (Math.random() * 4416);
-            }
+            x = (int) ((Math.random() * 2520) - 2816);
+            y = (int) ((Math.random() * 4036) - 4416);
         }
     }
     @Override
