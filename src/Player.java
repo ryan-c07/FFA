@@ -18,6 +18,7 @@ public class Player {
         x = 210;
         y = 192;
         image = loadImage(imageFile);
+        isDead = false;
     }
 
     public void setX(int x) {

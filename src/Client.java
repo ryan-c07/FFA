@@ -35,9 +35,11 @@ public class Client {
                 while (socket.isConnected()) {
                     try {
                         String line = bufferedReader.readLine();
-                        int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 2, line.indexOf("Y")));
-                        int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 2, line.indexOf("I")));
-                        String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("U"));
+                        int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 2, line.indexOf("Y:")));
+                        int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 2, line.indexOf("IMAGE:")));
+                        String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("POTATO:"));
+                        boolean potato = Boolean.parseBoolean(line.substring(line.indexOf("POTATO:") + 7, line.indexOf("DEAD:")));
+                        boolean dead = Boolean.parseBoolean(line.substring(line.indexOf("DEAD:") + 5, line.indexOf("USERNAME:")));
                         String username = line.substring(line.indexOf("USERNAME:") + 9);
                         boolean playerAlreadyExists = false;
                         for (int i = 0; i < panel.getOtherPlayers().size(); i++) {
@@ -45,6 +47,8 @@ public class Client {
                                 panel.getOtherPlayers().get(i).setX(temp_x);
                                 panel.getOtherPlayers().get(i).setY(temp_y);
                                 panel.getOtherPlayers().get(i).setImage(image);
+                                panel.getOtherPlayers().get(i).setHasPotato(potato);
+                                panel.getOtherPlayers().get(i).setDead(dead);
                                 playerAlreadyExists = true;
                             }
                         }
@@ -64,7 +68,7 @@ public class Client {
     public void writeToClientHandler(Map map, Player player){ // sets movement / writes it
         while(socket.isConnected()) {
             try {
-                String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile;
+                String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile + "POTATO:" + player.isHasPotato() + "DEAD:" + player.isDead();
                 if (!tempLine.equals(previousLine)) {
                     //System.out.println(tempLine);
                     previousLine = tempLine;

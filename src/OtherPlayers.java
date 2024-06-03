@@ -26,6 +26,23 @@ public class OtherPlayers {
             return null;
         }
     }
+
+    public boolean isHasPotato() {
+        return hasPotato;
+    }
+
+    public void setHasPotato(boolean hasPotato) {
+        this.hasPotato = hasPotato;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
     public int getX() {
         return x;
     }

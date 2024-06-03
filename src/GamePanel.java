@@ -52,116 +52,116 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
     public void update(){
-        if (!keyHandler.up && !keyHandler.down && !keyHandler.left && !keyHandler.right){
-            if (keyHandler.lastDirection.equals("W")){
-                player.image = player.loadImage("sprites/FORWARD/0.gif");
-            }
-            else if (keyHandler.lastDirection.equals("S")){
-                player.image = player.loadImage("sprites/BACKWARD/0.gif");
-            }
-            else if (keyHandler.lastDirection.equals("A")){
-                player.image = player.loadImage("sprites/LEFT/0.gif");
-            }
-            else if (keyHandler.lastDirection.equals("D")){
-                player.image = player.loadImage("sprites/RIGHT/0.gif");
-            }
-        }
-        if (keyHandler.up){
-            map.y = map.y + map.speed;
-            if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))) {
-                map.y = map.y - map.speed - 1;
-            }
-            if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                map.y = map.y - map.speed - 1;
-                player.setHasPotato((!player.isHasPotato()));
-            }
-            if (keyHandler.left) {
-                map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))) {
-                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2)) ;
+        if (!player.isDead()) {
+            if (!keyHandler.up && !keyHandler.down && !keyHandler.left && !keyHandler.right) {
+                if (keyHandler.lastDirection.equals("W")) {
+                    player.image = player.loadImage("sprites/FORWARD/0.gif");
+                } else if (keyHandler.lastDirection.equals("S")) {
+                    player.image = player.loadImage("sprites/BACKWARD/0.gif");
+                } else if (keyHandler.lastDirection.equals("A")) {
+                    player.image = player.loadImage("sprites/LEFT/0.gif");
+                } else if (keyHandler.lastDirection.equals("D")) {
+                    player.image = player.loadImage("sprites/RIGHT/0.gif");
                 }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2)) ;
+            }
+            if (keyHandler.up) {
+                map.y = map.y + map.speed;
+                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                    map.y = map.y - map.speed - 1;
+                }
+                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                    map.y = map.y - map.speed - 1;
                     player.setHasPotato((!player.isHasPotato()));
                 }
-            }
-
-            if (keyHandler.right) {
-                map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
+                if (keyHandler.left) {
                     map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    }
+                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                        player.setHasPotato((!player.isHasPotato()));
+                    }
                 }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                    map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    player.setHasPotato((!player.isHasPotato()));
-                }
-            }
 
-            player.changeForwardFrame();
-        }
-        else if (keyHandler.down){
-            map.y = map.y - map.speed;
-            if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                map.y = map.y + map.speed + 1;
-            }
-            if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                map.y = map.y + map.speed + 1;
-                player.setHasPotato(!player.isHasPotato());
-            }
-            if (keyHandler.left) {
-                map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))) {
+                if (keyHandler.right) {
                     map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    }
+                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                        player.setHasPotato((!player.isHasPotato()));
+                    }
                 }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+
+                player.changeForwardFrame();
+            } else if (keyHandler.down) {
+                map.y = map.y - map.speed;
+                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                    map.y = map.y + map.speed + 1;
+                }
+                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                    map.y = map.y + map.speed + 1;
                     player.setHasPotato(!player.isHasPotato());
                 }
-            }
-            if (keyHandler.right) {
-                map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))) {
+                if (keyHandler.left) {
                     map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    }
+                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                        player.setHasPotato(!player.isHasPotato());
+                    }
                 }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                    map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                if (keyHandler.right) {
+                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                    }
+                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
+                        player.setHasPotato(!player.isHasPotato());
+                    }
+                }
+
+                player.changeBackwardFrame();
+            } else if (keyHandler.left) {
+                map.x = map.x + map.speed;
+                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                    map.x = map.x - map.speed - 1;
+                }
+                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                    map.x = map.x - map.speed - 1;
                     player.setHasPotato(!player.isHasPotato());
                 }
+                player.changeLeftFrame();
+            } else if (keyHandler.right) {
+                map.x = map.x - map.speed;
+                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
+                    map.x = map.x + map.speed + 1;
+                }
+                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
+                    map.x = map.x + map.speed + 1;
+                    player.setHasPotato(!player.isHasPotato());
+                }
+                player.changeRightFrame();
             }
+            if (keyHandler.shift) {
+                map.speed = 10;
+            }
+            if (!keyHandler.shift) {
+                map.speed = 4;
+            }
+//            System.out.println("MAP : " + "X = " + map.getX() + ", Y = " + map.getY()); // test
+            if (player.isHasPotato()){
 
-            player.changeBackwardFrame();
-        }
-        else if (keyHandler.left){
-            map.x = map.x + map.speed;
-            if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                map.x = map.x - map.speed - 1;
             }
-            if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                map.x = map.x - map.speed - 1;
-                player.setHasPotato(!player.isHasPotato());
+            if (!player.isHasPotato()){
+
             }
-            player.changeLeftFrame();
         }
-        else if (keyHandler.right){
-            map.x = map.x - map.speed;
-            if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                map.x = map.x + map.speed + 1;
-            }
-            if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10,34,54))){
-                map.x = map.x + map.speed + 1;
-                player.setHasPotato(!player.isHasPotato());
-            }
-            player.changeRightFrame();
-        }
-        if (keyHandler.shift){
-            map.speed = 10;
-        }
-        if (!keyHandler.shift){
-            map.speed = 2;
-        }
-        borderRectangles.clear();
-        otherPlayersHitBoxes.clear();
-        System.out.println("MAP : " + "X = " + map.getX() + ", Y = " + map.getY()); // test
     }
 
     public void paintComponent(Graphics g){ // repaint
@@ -185,19 +185,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g2.drawRect(player.getX() + 15, player.getY() + 10, 34,54);
         g2.dispose();
     }
-    public boolean checkInMap(Rectangle hitBox){
+    public boolean checkInMap(Rectangle hitBox, int x, int y){
         for (int row = 0; row < map.tiles.length; row++) {
             for (int col = 0; col < map.tiles[0].length; col++) {
                 if (map.tiles[row][col] instanceof Border) {
-                    borderRectangles.add(new Rectangle(map.x + 64 * row, map.y + 64 * col, 64, 64));
+                    borderRectangles.add(new Rectangle(x + 64 * row, y + 64 * col, 64, 64));
                 }
             }
         }
         for (Rectangle r : borderRectangles) {
             if (hitBox.intersects(r)) {
+                borderRectangles.clear();
                 return false;
             }
         }
+        borderRectangles.clear();
         return true;
     }
 
@@ -211,21 +213,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 contains = true;
             }
         }
+        otherPlayersHitBoxes.clear();
         return contains;
     }
     public void spawnInRandomLocation(){
         int x = (int) ((Math.random() * 2330) - 2425);
         int y = (int) ((Math.random() * 4618) - 4027);
         while (true){
-            System.out.println(!checkInMap(new Rectangle(x + 15 + player.getX(),y + 10 + player.getY(), 34, 54)));
-            if (checkInMap(new Rectangle(player.getX(),player.getY(), 34, 54))){
+            System.out.println(!checkInMap(new Rectangle(player.getX() + 15 + x, player.getY() + 10 + y, 34, 54), x , y));
+            System.out.println(x);
+            System.out.println(y);
+            if (!checkInMap(new Rectangle(player.getX() + 15 + x, player.getY() + 10 + y, 34, 54), x, y)){
                 map.x = x;
                 map.y = y;
                 break;
             }
-            x = (int) ((Math.random() * 2520) - 2816);
-            y = (int) ((Math.random() * 4036) - 4416);
+            x = (int) ((Math.random() * 2330) - 2425);
+            y = (int) ((Math.random() * 4618) - 4027);
         }
+        System.out.println("MAP : " + "X = " + x + ", Y = " + y); // test
     }
     @Override
     public void keyTyped(KeyEvent e) {}
