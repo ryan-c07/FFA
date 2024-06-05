@@ -154,7 +154,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             if (!keyHandler.shift) {
                 map.speed = 4;
             }
-//            System.out.println("MAP : " + "X = " + map.getX() + ", Y = " + map.getY()); // test
+            System.out.println("MAP : " + "X = " + map.getX() + ", Y = " + map.getY()); // test
             if (player.isHasPotato()){
 
             }
@@ -173,7 +173,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null,null);
                 if (map.tiles[row][col] instanceof Border){
                     g2.drawRect(map.x + 64 * row, map.y + 64 * col, 64, 64);
-
                 }
             }
         }
@@ -217,21 +216,35 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         return contains;
     }
     public void spawnInRandomLocation(){
-        int x = (int) ((Math.random() * 2330) - 2425);
-        int y = (int) ((Math.random() * 4618) - 4027);
-        while (true){
-            System.out.println(!checkInMap(new Rectangle(player.getX() + 15 + x, player.getY() + 10 + y, 34, 54), x , y));
-            System.out.println(x);
-            System.out.println(y);
-            if (!checkInMap(new Rectangle(player.getX() + 15 + x, player.getY() + 10 + y, 34, 54), x, y)){
+        int x = 0;
+        int y = 0;
+        boolean notInWall = false;
+        Rectangle playerHitBox = new Rectangle(player.getX() + 15 + x, player.getY() + 10 + y, 34, 54);
+        while (!notInWall){
+            x = (int) (Math.random() * (-17 + 2311) - 2311);
+            y = (int) (Math.random() * (-94 + 3926) - 3926);
+            borderRectangles.clear();
+            for (int row = 0; row < map.tiles.length; row++) {
+                for (int col = 0; col < map.tiles[0].length; col++) {
+                    if (map.tiles[row][col] instanceof Border) {
+                        borderRectangles.add(new Rectangle(x + 64 * row, y + 64 * col, 64, 64));
+                    }
+                }
+            }
+            notInWall = true;
+            for (Rectangle r : borderRectangles) {
+                if (playerHitBox.intersects(r)) {
+                    notInWall = false;
+                    System.out.println("true");
+                    System.out.println("MAP : " + "X = " + x + ", Y = " + y); // test
+
+                }
+            }
+            if (notInWall == true) {
                 map.x = x;
                 map.y = y;
-                break;
             }
-            x = (int) ((Math.random() * 2330) - 2425);
-            y = (int) ((Math.random() * 4618) - 4027);
         }
-        System.out.println("MAP : " + "X = " + x + ", Y = " + y); // test
     }
     @Override
     public void keyTyped(KeyEvent e) {}
