@@ -16,7 +16,6 @@ public class Client {
     private BufferedWriter bufferedWriter;
     private ArrayList<OtherPlayers> others = new ArrayList<>();
     private String previousLine;
-    private boolean firstLine = true;
 
     public Client(Socket socket, GamePanel panel) {
         try {
@@ -36,30 +35,34 @@ public class Client {
                 while (socket.isConnected()) {
                     try {
                         String line = bufferedReader.readLine();
-                        int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 2, line.indexOf("Y:")));
-                        int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 2, line.indexOf("IMAGE:")));
-                        String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("POTATO:"));
-                        boolean potato = Boolean.parseBoolean(line.substring(line.indexOf("POTATO:") + 7, line.indexOf("DEAD:")));
-                        boolean dead = Boolean.parseBoolean(line.substring(line.indexOf("DEAD:") + 5, line.indexOf("USERNAME:")));
-                        String username = line.substring(line.indexOf("USERNAME:") + 9, line.indexOf("STATUS:"));
-                        boolean disconnected = Boolean.parseBoolean(line.substring(line.indexOf("STATUS:") + 7));
-                        boolean playerAlreadyExists = false;
-                        for (int i = 0; i < panel.getOtherPlayers().size(); i++) {
-                            if (panel.getOtherPlayers().get(i).getUsername().equals(username)) {
-                                panel.getOtherPlayers().get(i).setX(temp_x);
-                                panel.getOtherPlayers().get(i).setY(temp_y);
-                                panel.getOtherPlayers().get(i).setImage(image);
-                                panel.getOtherPlayers().get(i).setHasPotato(potato);
-                                panel.getOtherPlayers().get(i).setDead(dead);
-                                panel.getOtherPlayers().get(i).setStatus(disconnected);
-                                playerAlreadyExists = true;
+//                        if (!line.endsWith("SELF")) {
+                            int temp_x = Integer.parseInt(line.substring(line.indexOf("X:") + 2, line.indexOf("Y:")));
+                            int temp_y = Integer.parseInt(line.substring(line.indexOf("Y:") + 2, line.indexOf("IMAGE:")));
+                            String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("DEAD:"));
+                            boolean dead = Boolean.parseBoolean(line.substring(line.indexOf("DEAD:") + 5, line.indexOf("USERNAME:")));
+                            String username = line.substring(line.indexOf("USERNAME:") + 9); // , line.indexOf("STATUS:"));
+//                            boolean disconnected = Boolean.parseBoolean(line.substring(line.indexOf("STATUS:") + 6));
+                            boolean playerAlreadyExists = false;
+                            for (int i = 0; i < panel.getOtherPlayers().size(); i++) {
+                                if (panel.getOtherPlayers().get(i).getUsername().equals(username)) {
+                                    panel.getOtherPlayers().get(i).setX(temp_x);
+                                    panel.getOtherPlayers().get(i).setY(temp_y);
+                                    panel.getOtherPlayers().get(i).setImage(image);
+                                    panel.getOtherPlayers().get(i).setDead(dead);
+//                                    panel.getOtherPlayers().get(i).setStatus(disconnected);
+                                    playerAlreadyExists = true;
+                                }
                             }
-                        }
-                        if (!playerAlreadyExists) {
-                            OtherPlayers newPlayer = new OtherPlayers(temp_x, temp_y, image, username, disconnected);
-                            panel.getOtherPlayers().add(newPlayer);
-                        }
-//                        System.out.println("check");
+                            if (!playerAlreadyExists) {
+                                OtherPlayers newPlayer = new OtherPlayers(temp_x, temp_y, image, username); //disconnected);
+                                panel.getOtherPlayers().add(newPlayer);
+                            }
+//                        }
+//                        if (previousLine.endsWith("SELF")){
+//                            boolean disconnected = Boolean.parseBoolean(line.substring(line.indexOf("STATUS:") + 6, line.indexOf("SELF")));
+//                            System.out.println(disconnected);
+//                            panel.player.setStatus(disconnected);
+//                        }
                     } catch (IOException e) {
                         System.out.println("UNABLE TO READ OTHER PLAYERS MOVEMENT");
                         closeEverything(socket, bufferedReader, bufferedWriter);
@@ -71,7 +74,7 @@ public class Client {
     public void writeToClientHandler(Map map, Player player){ // sets movement / writes it
         while(socket.isConnected()) {
             try {
-                String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile + "POTATO:" + player.isHasPotato() + "DEAD:" + player.isDead();
+                String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile + "DEAD:" + player.isDead();
                 if (!tempLine.equals(previousLine)) {
                     //System.out.println(tempLine);
                     previousLine = tempLine;

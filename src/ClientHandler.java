@@ -1,20 +1,16 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ClientHandler implements Runnable{
 // give x y of current player / using client
-    public static List<ClientHandler> clientHandlers = new CopyOnWriteArrayList<>();
+    public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private String username;
+    private boolean disconnected;
     private String nextLine;
-    private boolean disconnected = false;
-    private String tempLine = "";
-    private String writtenAlready = "";
 
     public ClientHandler(Socket socket, String username) {
         try {
@@ -36,9 +32,8 @@ public class ClientHandler implements Runnable{
                 writeToClientHandlers(nextLine);
             }
             catch(IOException e){
-                System.out.println("Client disconnected!");
                 disconnected = true;
-                writeToClientHandlers(nextLine);
+                System.out.println("Client disconnected!");
                 closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
             }
@@ -46,26 +41,25 @@ public class ClientHandler implements Runnable{
     }
 
     public void readFromClient() throws IOException { // gets movement from other ppl / reads it
-        if (!tempLine.contains(nextLine)){
             nextLine = bufferedReader.readLine();
-            tempLine += nextLine;
-        }
     }
 
     public void writeToClientHandlers(String lineOfMovement){ // sets movement / writes it
         for (ClientHandler clientHandler : clientHandlers) {
-            try {
-                if (!clientHandler.username.equals(this.username) && !writtenAlready.contains(lineOfMovement)) {
-                    clientHandler.bufferedWriter.write(lineOfMovement + "USERNAME:" + username + "STATUS:" + disconnected);
-                    clientHandler.bufferedWriter.newLine();
-                    // manually sent the data in buffer over
-                    clientHandler.bufferedWriter.flush();
-                    writtenAlready += lineOfMovement;
+                try {
+                    if (!clientHandler.username.equals(this.username)) {
+                        clientHandler.bufferedWriter.write(lineOfMovement + "USERNAME:" + username); // + "STATUS:" + disconnected
+                        clientHandler.bufferedWriter.newLine();
+                        //manually sent the data in buffer over
+                        clientHandler.bufferedWriter.flush();
+                    }
+//                    else {
+//                        clientHandler.bufferedWriter.write(lineOfMovement + "USERNAME:" + username + "STATUS:" + disconnected + "SELF");
+//                    }
                 }
-            }
-            catch (IOException e) {
-                System.out.println("test");
-                closeEverything(socket, bufferedReader, bufferedWriter);
+                catch (IOException e) {
+                    System.out.println("test");
+                    closeEverything(socket, bufferedReader, bufferedWriter);
             }
         }
     }

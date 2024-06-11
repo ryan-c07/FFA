@@ -1,12 +1,10 @@
-import javax.swing.*;
+import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
@@ -18,18 +16,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     ArrayList<Rectangle> otherPlayersHitBoxes = new ArrayList<Rectangle>();
     ArrayList<OtherPlayers> otherPlayers = new ArrayList<OtherPlayers>();
 
-    boolean menu = true;
-
     public GamePanel(){
         this.setPreferredSize(new Dimension(512, 512));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        spawnInRandomLocation();
+
     }
 
     public void startGameThread(){
-        gameThread = new Thread(this);
+        Thread gameThread = new Thread(this);
         gameThread.start();
     }
     @Override
@@ -54,13 +52,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
     public void update(){
-        if (!menu) {
-            if (!player.isDead()) {
-                player.aliveMovement();
-            }
-            else {
-                player.deadMovement();
-            }
+        if (!player.isDead()){
+            player.aliveMovement();
+        }
+        else{
+            player.deadMovement();
         }
     }
 
@@ -68,62 +64,34 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         g2.setColor(Color.white);
-        if (menu){
-            g2.drawString("Controls: ", 5, 20);
-            g2.drawString("Shift to sprint", 5, 50);
-            g2.drawString("WASD to move", 5, 70);
-            g2.drawString("Run into people to transfer the potato", 5, 100);
-            g2.drawString("Objective : Be the last one standing ( yea no just find people )", 5, 120);
-            g2.drawString("Click E to get out of the menu", 5, 200);
-
-            if (keyHandler.ready){
-                spawnInRandomLocation();
-                menu = false;
+        for (int row = 0; row < map.tiles.length; row++){
+            for (int col = 0; col < map.tiles[0].length; col++){
+                g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null,null);
+                if (map.tiles[row][col] instanceof Border){
+                    // g2.drawRect(map.x + 64 * row, map.y + 64 * col, 64, 64);
+                }
             }
         }
-        if (!menu) {
-            for (int row = 0; row < map.tiles.length; row++) {
-                for (int col = 0; col < map.tiles[0].length; col++) {
-                    g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null, null);
-                    if (map.tiles[row][col] instanceof Border) {
-//                    g2.drawRect(map.x + 64 * row, map.y + 64 * col, 64, 64);
-                    }
-                }
+        for (int i = 0;i < otherPlayers.size(); i++){
+            if (!otherPlayers.get(i).isDead()) {
+                g2.drawImage(otherPlayers.get(i).getImage(), map.x - otherPlayers.get(i).getX() + player.getX(), map.y - otherPlayers.get(i).getY() + player.getY(), null, null);
+                g2.drawRect(map.x - otherPlayers.get(i).getX() + player.getX() + 15, map.y - otherPlayers.get(i).getY() + player.getY() + 10, 34, 54);
             }
-            for (int i = 0; i < otherPlayers.size(); i++) {
-                if (otherPlayers.get(i).getStatus()){
-                    otherPlayers.get(i).setImage("sprites/nothing.png");
-                    otherPlayers.get(i).setDead(true);
-                }
-                else if (!otherPlayers.get(i).isDead() && !otherPlayers.get(i).getStatus()) {
-                    g2.drawImage(otherPlayers.get(i).getImage(), map.x - otherPlayers.get(i).getX() + player.getX(), map.y - otherPlayers.get(i).getY() + player.getY(), null, null);
-                    if (otherPlayers.get(i).isHasPotato()) {
-                        g2.setColor(Color.RED);
-                        g2.drawRect(map.x - otherPlayers.get(i).getX() + player.getX() + 15, map.y - otherPlayers.get(i).getY() + player.getY() + 10, 34, 54);
-                    } else {
-                        g2.setColor(Color.WHITE);
-                        g2.drawRect(map.x - otherPlayers.get(i).getX() + player.getX() + 15, map.y - otherPlayers.get(i).getY() + player.getY() + 10, 34, 54);
-                    }
-                }
+            if (otherPlayers.get(i).isDead()){
+                otherPlayers.get(i).setImage("sprites/OTHERS/nothing.png");
+                otherPlayers.get(i).setDead(true);
             }
-            if (!player.isDead()) {
-                g2.drawImage(player.getImage(), player.getX(), player.getY(), null, null);
-                if (player.isHasPotato()) {
-                    g2.setColor(Color.RED);
-                    g2.drawRect(player.getX() + 15, player.getY() + 10, 34, 54);
-                } else {
-                    g2.setColor(Color.WHITE);
-                    g2.drawRect(player.getX() + 15, player.getY() + 10, 34, 54);
-                }
-            }
-            else{
-                player.image = player.loadImage("sprites/nothing.png");
-                player.imageFile = "sprites/nothing.png";
-            }
+        }
+        if (player.isDead()){
+            player.imageFile = "sprites/OTHERS/nothing.png";
+            player.setImage(player.imageFile);
+        }
+        if (!player.isDead()) {
+            g2.drawImage(player.getImage(), player.getX(), player.getY(), null, null);
+            g2.drawRect(player.getX() + 15, player.getY() + 10, 34, 54);
         }
         g2.dispose();
     }
-
     public void spawnInRandomLocation(){
         int x = 0;
         int y = 0;
@@ -152,19 +120,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
     }
-
-    public void randomizePotato(){
-        int totalPlayersAlive = 0;
-        if (!player.isDead()){
-            totalPlayersAlive++;
-        }
-        for (int i = 0;i < otherPlayers.size();i++){
-            if (!otherPlayers.get(i).isDead()){
-                totalPlayersAlive++;
-            }
-        }
-        int randomizedNumber = (int) (Math.random()*totalPlayersAlive);
-    }
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -183,5 +138,4 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public ArrayList<OtherPlayers> getOtherPlayers() {
         return otherPlayers;
     }
-
 }
