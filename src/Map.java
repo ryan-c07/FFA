@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class Map extends JPanel{
-    public Tile[][] tiles = new Tile[44][69];
+    public Tile[][] tiles = new Tile[44][70];
     public int x, y, speed; // make private
 
     public Map(int x, int y, int speed){

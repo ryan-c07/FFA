@@ -26,7 +26,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
-        spawnInRandomLocation();
     }
 
     public void startGameThread(){
@@ -70,41 +69,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         Graphics2D g2 = (Graphics2D)g;
         g2.setColor(Color.white);
         if (menu){
-            final int[] countdown = {10};
-
-            int size = 1;
-            for (OtherPlayers others: otherPlayers){
-                if (!others.isDead()){
-                    size++;
-                }
-            }
-            if (otherPlayers.size() + 1 >= 4){
-                JLabel timerLabel = new JLabel("10", SwingConstants.CENTER);
-                add(timerLabel);
-                Timer timer = new Timer(1000, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        countdown[0]--;
-                        timerLabel.setText(String.valueOf(countdown[0]));
-                        if (countdown[0] == 0) {
-                            ((Timer) e.getSource()).stop();
-                            menu = false;
-                        }
-                    }
-                });timer.start();
-            }
-            g2.drawString("Waiting for more than two players to start", 5, 20);
-            g2.drawString("Current Number of Players Waiting: " + size, 5, 50);
-            g2.drawString("Controls: ", 5, 80);
-            g2.drawString("Shift to sprint", 5, 100);
-            g2.drawString("WASD to move", 5, 120);
-            g2.drawString("Run into people to transfer the potato", 5, 140);
-            g2.drawString("Objective : Be the last one standing", 5, 200);
-            g2.drawString("SPAM any key to ready up", 5, 4600);
+            g2.drawString("Controls: ", 5, 20);
+            g2.drawString("Shift to sprint", 5, 50);
+            g2.drawString("WASD to move", 5, 70);
+            g2.drawString("Run into people to transfer the potato", 5, 100);
+            g2.drawString("Objective : Be the last one standing ( yea no just find people )", 5, 120);
+            g2.drawString("Click E to get out of the menu", 5, 200);
 
             if (keyHandler.ready){
-                map.x --;
-                map.x ++;
+                spawnInRandomLocation();
+                menu = false;
             }
         }
         if (!menu) {

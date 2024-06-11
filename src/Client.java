@@ -72,23 +72,12 @@ public class Client {
         while(socket.isConnected()) {
             try {
                 String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile + "POTATO:" + player.isHasPotato() + "DEAD:" + player.isDead();
-                if (firstLine){
-                    previousLine = tempLine;
-                    bufferedWriter.write(tempLine);
-                    bufferedWriter.newLine();
-                    bufferedWriter.flush();
-                    System.out.println("WRITE: " + tempLine);
-                }
-                if (!previousLine.equals(tempLine)){
-                    firstLine = false;
-                }
                 if (!tempLine.equals(previousLine)) {
                     //System.out.println(tempLine);
                     previousLine = tempLine;
                     bufferedWriter.write(tempLine);
                     bufferedWriter.newLine();
                     bufferedWriter.flush();
-                    System.out.println("WRITE: " + tempLine);
                 }
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);

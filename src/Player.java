@@ -26,7 +26,7 @@ public class Player implements ActionListener {
         x = 210;
         y = 192;
         image = loadImage(imageFile);
-        isDead = false;
+        isDead = true;
         hasPotato = true;
         status = false;
     }
