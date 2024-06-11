@@ -10,6 +10,9 @@ public class ClientHandler implements Runnable{
     private BufferedWriter bufferedWriter;
     private String username;
     private String nextLine;
+    private boolean disconnected = false;
+    private String tempLine = "";
+    private String writtenAlready = "";
 
     public ClientHandler(Socket socket, String username) {
         try {
@@ -32,6 +35,8 @@ public class ClientHandler implements Runnable{
             }
             catch(IOException e){
                 System.out.println("Client disconnected!");
+                disconnected = true;
+                writeToClientHandlers(nextLine);
                 closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
             }
@@ -39,20 +44,22 @@ public class ClientHandler implements Runnable{
     }
 
     public void readFromClient() throws IOException { // gets movement from other ppl / reads it
+        if (!tempLine.contains(nextLine)){
             nextLine = bufferedReader.readLine();
-//            System.out.println("Read: " + nextLine);
-//        System.out.println(clientHandlers.size());
+            tempLine += nextLine;
+            System.out.println("read");
+        }
     }
 
     public void writeToClientHandlers(String lineOfMovement){ // sets movement / writes it
         for (ClientHandler clientHandler : clientHandlers) {
             try {
-                if (!clientHandler.username.equals(this.username)) {
-//                    System.out.println("Sent: " + lineOfMovement);
-                    clientHandler.bufferedWriter.write(lineOfMovement + "USERNAME:" + username);
+                if (!clientHandler.username.equals(this.username) && !writtenAlready.contains(lineOfMovement)) {
+                    clientHandler.bufferedWriter.write(lineOfMovement + "USERNAME:" + username + "STATUS:" + disconnected);
                     clientHandler.bufferedWriter.newLine();
-                    //manually sent the data in buffer over
+                    // manually sent the data in buffer over
                     clientHandler.bufferedWriter.flush();
+                    writtenAlready += lineOfMovement;
                 }
             }
             catch (IOException e) {

@@ -1,20 +1,24 @@
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
-    Player player = new Player();
+    Player player = new Player(this);
     Map map = new Map(0, 0, 2);
     double FPS = 60;
     ArrayList<Rectangle> borderRectangles = new ArrayList<Rectangle>();
     ArrayList<Rectangle> otherPlayersHitBoxes = new ArrayList<Rectangle>();
     ArrayList<OtherPlayers> otherPlayers = new ArrayList<OtherPlayers>();
+
+    boolean menu = true;
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(512, 512));
@@ -23,11 +27,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         spawnInRandomLocation();
-
     }
 
     public void startGameThread(){
-        Thread gameThread = new Thread(this);
+        gameThread = new Thread(this);
         gameThread.start();
     }
     @Override
@@ -52,114 +55,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
     public void update(){
-        if (!player.isDead()) {
-            if (!keyHandler.up && !keyHandler.down && !keyHandler.left && !keyHandler.right) {
-                if (keyHandler.lastDirection.equals("W")) {
-                    player.image = player.loadImage("sprites/FORWARD/0.gif");
-                } else if (keyHandler.lastDirection.equals("S")) {
-                    player.image = player.loadImage("sprites/BACKWARD/0.gif");
-                } else if (keyHandler.lastDirection.equals("A")) {
-                    player.image = player.loadImage("sprites/LEFT/0.gif");
-                } else if (keyHandler.lastDirection.equals("D")) {
-                    player.image = player.loadImage("sprites/RIGHT/0.gif");
-                }
+        if (!menu) {
+            if (!player.isDead()) {
+                player.aliveMovement();
             }
-            if (keyHandler.up) {
-                map.y = map.y + map.speed;
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                    map.y = map.y - map.speed - 1;
-                }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                    map.y = map.y - map.speed - 1;
-                    player.setHasPotato((!player.isHasPotato()));
-                }
-                if (keyHandler.left) {
-                    map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    }
-                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                        player.setHasPotato((!player.isHasPotato()));
-                    }
-                }
-
-                if (keyHandler.right) {
-                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    }
-                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                        player.setHasPotato((!player.isHasPotato()));
-                    }
-                }
-
-                player.changeForwardFrame();
-            } else if (keyHandler.down) {
-                map.y = map.y - map.speed;
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                    map.y = map.y + map.speed + 1;
-                }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                    map.y = map.y + map.speed + 1;
-                    player.setHasPotato(!player.isHasPotato());
-                }
-                if (keyHandler.left) {
-                    map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    }
-                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                        map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                        player.setHasPotato(!player.isHasPotato());
-                    }
-                }
-                if (keyHandler.right) {
-                    map.x = map.x - (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                    }
-                    if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                        map.x = map.x + (int) Math.sqrt((Math.pow(map.speed, 2) / 2));
-                        player.setHasPotato(!player.isHasPotato());
-                    }
-                }
-
-                player.changeBackwardFrame();
-            } else if (keyHandler.left) {
-                map.x = map.x + map.speed;
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                    map.x = map.x - map.speed - 1;
-                }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                    map.x = map.x - map.speed - 1;
-                    player.setHasPotato(!player.isHasPotato());
-                }
-                player.changeLeftFrame();
-            } else if (keyHandler.right) {
-                map.x = map.x - map.speed;
-                if (!checkInMap(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54), map.x, map.y)) {
-                    map.x = map.x + map.speed + 1;
-                }
-                if (checkPlayerIntersects(new Rectangle(player.getX() + 15, player.getY() + 10, 34, 54))) {
-                    map.x = map.x + map.speed + 1;
-                    player.setHasPotato(!player.isHasPotato());
-                }
-                player.changeRightFrame();
-            }
-            if (keyHandler.shift) {
-                map.speed = 10;
-            }
-            if (!keyHandler.shift) {
-                map.speed = 4;
-            }
-            System.out.println("MAP : " + "X = " + map.getX() + ", Y = " + map.getY()); // test
-            if (player.isHasPotato()){
-
-            }
-            if (!player.isHasPotato()){
-
+            else {
+                player.deadMovement();
             }
         }
     }
@@ -168,53 +69,87 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         g2.setColor(Color.white);
-        for (int row = 0; row < map.tiles.length; row++){
-            for (int col = 0; col < map.tiles[0].length; col++){
-                g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null,null);
-                if (map.tiles[row][col] instanceof Border){
-                    g2.drawRect(map.x + 64 * row, map.y + 64 * col, 64, 64);
+        if (menu){
+            final int[] countdown = {10};
+
+            int size = 1;
+            for (OtherPlayers others: otherPlayers){
+                if (!others.isDead()){
+                    size++;
                 }
             }
+            if (otherPlayers.size() + 1 >= 4){
+                JLabel timerLabel = new JLabel("10", SwingConstants.CENTER);
+                add(timerLabel);
+                Timer timer = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        countdown[0]--;
+                        timerLabel.setText(String.valueOf(countdown[0]));
+                        if (countdown[0] == 0) {
+                            ((Timer) e.getSource()).stop();
+                            menu = false;
+                        }
+                    }
+                });timer.start();
+            }
+            g2.drawString("Waiting for more than two players to start", 5, 20);
+            g2.drawString("Current Number of Players Waiting: " + size, 5, 50);
+            g2.drawString("Controls: ", 5, 80);
+            g2.drawString("Shift to sprint", 5, 100);
+            g2.drawString("WASD to move", 5, 120);
+            g2.drawString("Run into people to transfer the potato", 5, 140);
+            g2.drawString("Objective : Be the last one standing", 5, 200);
+            g2.drawString("SPAM any key to ready up", 5, 4600);
+
+            if (keyHandler.ready){
+                map.x --;
+                map.x ++;
+            }
         }
-        for (int i = 0;i < otherPlayers.size(); i++){
-            g2.drawImage(otherPlayers.get(i).getImage(), map.x - otherPlayers.get(i).getX() + player.getX(), map.y - otherPlayers.get(i).getY() + player.getY(), null, null);
-            g2.drawRect(map.x - otherPlayers.get(i).getX() + player.getX() + 15, map.y - otherPlayers.get(i).getY() + player.getY() + 10,34,54);
+        if (!menu) {
+            for (int row = 0; row < map.tiles.length; row++) {
+                for (int col = 0; col < map.tiles[0].length; col++) {
+                    g2.drawImage(map.tiles[row][col].getImage(), map.x + 64 * row, map.y + 64 * col, null, null);
+                    if (map.tiles[row][col] instanceof Border) {
+//                    g2.drawRect(map.x + 64 * row, map.y + 64 * col, 64, 64);
+                    }
+                }
+            }
+            for (int i = 0; i < otherPlayers.size(); i++) {
+                if (otherPlayers.get(i).getStatus()){
+                    otherPlayers.get(i).setImage("sprites/nothing.png");
+                    otherPlayers.get(i).setDead(true);
+                }
+                else if (!otherPlayers.get(i).isDead() && !otherPlayers.get(i).getStatus()) {
+                    g2.drawImage(otherPlayers.get(i).getImage(), map.x - otherPlayers.get(i).getX() + player.getX(), map.y - otherPlayers.get(i).getY() + player.getY(), null, null);
+                    if (otherPlayers.get(i).isHasPotato()) {
+                        g2.setColor(Color.RED);
+                        g2.drawRect(map.x - otherPlayers.get(i).getX() + player.getX() + 15, map.y - otherPlayers.get(i).getY() + player.getY() + 10, 34, 54);
+                    } else {
+                        g2.setColor(Color.WHITE);
+                        g2.drawRect(map.x - otherPlayers.get(i).getX() + player.getX() + 15, map.y - otherPlayers.get(i).getY() + player.getY() + 10, 34, 54);
+                    }
+                }
+            }
+            if (!player.isDead()) {
+                g2.drawImage(player.getImage(), player.getX(), player.getY(), null, null);
+                if (player.isHasPotato()) {
+                    g2.setColor(Color.RED);
+                    g2.drawRect(player.getX() + 15, player.getY() + 10, 34, 54);
+                } else {
+                    g2.setColor(Color.WHITE);
+                    g2.drawRect(player.getX() + 15, player.getY() + 10, 34, 54);
+                }
+            }
+            else{
+                player.image = player.loadImage("sprites/nothing.png");
+                player.imageFile = "sprites/nothing.png";
+            }
         }
-        g2.drawImage(player.getImage(), player.getX(), player.getY(), null, null);
-        g2.drawRect(player.getX() + 15, player.getY() + 10, 34,54);
         g2.dispose();
     }
-    public boolean checkInMap(Rectangle hitBox, int x, int y){
-        for (int row = 0; row < map.tiles.length; row++) {
-            for (int col = 0; col < map.tiles[0].length; col++) {
-                if (map.tiles[row][col] instanceof Border) {
-                    borderRectangles.add(new Rectangle(x + 64 * row, y + 64 * col, 64, 64));
-                }
-            }
-        }
-        for (Rectangle r : borderRectangles) {
-            if (hitBox.intersects(r)) {
-                borderRectangles.clear();
-                return false;
-            }
-        }
-        borderRectangles.clear();
-        return true;
-    }
 
-    public boolean checkPlayerIntersects(Rectangle hitBox){
-        for (int i = 0; i < otherPlayers.size(); i++) {
-            otherPlayersHitBoxes.add(new Rectangle(map.x - otherPlayers.get(i).getX() + player.getX() + 15, map.y - otherPlayers.get(i).getY() + player.getY() + 10,34,54));
-        }
-        boolean contains = false;
-        for (Rectangle hitboxes : otherPlayersHitBoxes){
-            if (hitboxes.intersects(hitBox)){
-                contains = true;
-            }
-        }
-        otherPlayersHitBoxes.clear();
-        return contains;
-    }
     public void spawnInRandomLocation(){
         int x = 0;
         int y = 0;
@@ -235,16 +170,26 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             for (Rectangle r : borderRectangles) {
                 if (playerHitBox.intersects(r)) {
                     notInWall = false;
-                    System.out.println("true");
-                    System.out.println("MAP : " + "X = " + x + ", Y = " + y); // test
-
                 }
             }
-            if (notInWall == true) {
+            if (notInWall) {
                 map.x = x;
                 map.y = y;
             }
         }
+    }
+
+    public void randomizePotato(){
+        int totalPlayersAlive = 0;
+        if (!player.isDead()){
+            totalPlayersAlive++;
+        }
+        for (int i = 0;i < otherPlayers.size();i++){
+            if (!otherPlayers.get(i).isDead()){
+                totalPlayersAlive++;
+            }
+        }
+        int randomizedNumber = (int) (Math.random()*totalPlayersAlive);
     }
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -264,4 +209,5 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public ArrayList<OtherPlayers> getOtherPlayers() {
         return otherPlayers;
     }
+
 }

@@ -5,7 +5,6 @@ import java.net.*;
 
 public class Server {
     private ServerSocket serverSocket;
-
     private static int playerNum = 0;
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -17,10 +16,10 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 System.out.println("A new client has connected!");
                 ClientHandler clientHandler = new ClientHandler(socket, "" + playerNum);
-                ClientHandler.clientHandlers.add(clientHandler);
-                playerNum++;
                 Thread thread = new Thread(clientHandler);
                 thread.start();
+                ClientHandler.clientHandlers.add(clientHandler);
+                playerNum++;
             }
         } catch (IOException e) {
             closeServerSocket();

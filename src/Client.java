@@ -16,6 +16,7 @@ public class Client {
     private BufferedWriter bufferedWriter;
     private ArrayList<OtherPlayers> others = new ArrayList<>();
     private String previousLine;
+    private boolean firstLine = true;
 
     public Client(Socket socket, GamePanel panel) {
         try {
@@ -40,7 +41,8 @@ public class Client {
                         String image = line.substring(line.indexOf("IMAGE:") + 6, line.indexOf("POTATO:"));
                         boolean potato = Boolean.parseBoolean(line.substring(line.indexOf("POTATO:") + 7, line.indexOf("DEAD:")));
                         boolean dead = Boolean.parseBoolean(line.substring(line.indexOf("DEAD:") + 5, line.indexOf("USERNAME:")));
-                        String username = line.substring(line.indexOf("USERNAME:") + 9);
+                        String username = line.substring(line.indexOf("USERNAME:") + 9, line.indexOf("STATUS:"));
+                        boolean disconnected = Boolean.parseBoolean(line.substring(line.indexOf("STATUS:") + 7));
                         boolean playerAlreadyExists = false;
                         for (int i = 0; i < panel.getOtherPlayers().size(); i++) {
                             if (panel.getOtherPlayers().get(i).getUsername().equals(username)) {
@@ -49,11 +51,12 @@ public class Client {
                                 panel.getOtherPlayers().get(i).setImage(image);
                                 panel.getOtherPlayers().get(i).setHasPotato(potato);
                                 panel.getOtherPlayers().get(i).setDead(dead);
+                                panel.getOtherPlayers().get(i).setStatus(disconnected);
                                 playerAlreadyExists = true;
                             }
                         }
                         if (!playerAlreadyExists) {
-                            OtherPlayers newPlayer = new OtherPlayers(temp_x, temp_y, image, username);
+                            OtherPlayers newPlayer = new OtherPlayers(temp_x, temp_y, image, username, disconnected);
                             panel.getOtherPlayers().add(newPlayer);
                         }
 //                        System.out.println("check");
@@ -69,12 +72,23 @@ public class Client {
         while(socket.isConnected()) {
             try {
                 String tempLine = "X:" + map.x + "Y:" + map.y + "IMAGE:" + player.imageFile + "POTATO:" + player.isHasPotato() + "DEAD:" + player.isDead();
+                if (firstLine){
+                    previousLine = tempLine;
+                    bufferedWriter.write(tempLine);
+                    bufferedWriter.newLine();
+                    bufferedWriter.flush();
+                    System.out.println("WRITE: " + tempLine);
+                }
+                if (!previousLine.equals(tempLine)){
+                    firstLine = false;
+                }
                 if (!tempLine.equals(previousLine)) {
                     //System.out.println(tempLine);
                     previousLine = tempLine;
                     bufferedWriter.write(tempLine);
                     bufferedWriter.newLine();
                     bufferedWriter.flush();
+                    System.out.println("WRITE: " + tempLine);
                 }
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);

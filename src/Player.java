@@ -1,16 +1,24 @@
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Player {
+public class Player implements ActionListener {
+    private Timer timer;
     public BufferedImage image;
     private int x, y, forwardImageNumber, backwardImageNumber, rightImageNumber, leftImageNumber;
-    private boolean hasPotato, isDead;
+    private boolean hasPotato, isDead, status;
     public String imageFile = "sprites/BACKWARD/0.gif";
+    private GamePanel panel;
 
-    public Player() {
+    public Player(GamePanel panel) {
+        timer = new Timer(1000, this);
+        this.panel = panel;
         forwardImageNumber = 15;
         backwardImageNumber = 15;
         rightImageNumber = 15;
@@ -19,40 +27,184 @@ public class Player {
         y = 192;
         image = loadImage(imageFile);
         isDead = false;
+        hasPotato = true;
+        status = false;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void aliveMovement(){
+        if (hasPotato){
+            timer.start();
+        }
+        if (!panel.keyHandler.up && !panel.keyHandler.down && !panel.keyHandler.left && !panel.keyHandler.right) {
+            if (panel.keyHandler.lastDirection.equals("W")) {
+                panel.player.image = panel.player.loadImage("sprites/FORWARD/0.gif");
+            } else if (panel.keyHandler.lastDirection.equals("S")) {
+                panel.player.image = panel.player.loadImage("sprites/BACKWARD/0.gif");
+            } else if (panel.keyHandler.lastDirection.equals("A")) {
+                panel.player.image = panel.player.loadImage("sprites/LEFT/0.gif");
+            } else if (panel.keyHandler.lastDirection.equals("D")) {
+                panel.player.image = panel.player.loadImage("sprites/RIGHT/0.gif");
+            }
+        }
+        if (panel.keyHandler.up) {
+            panel.map.y = panel.map.y + panel.map.speed;
+            if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                panel.map.y = panel.map.y - panel.map.speed - 1;
+            }
+            if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                panel.map.y = panel.map.y - panel.map.speed - 1;
+                panel.player.setHasPotato((!panel.player.isHasPotato()));
+            }
+            if (panel.keyHandler.left) {
+                panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                    panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                }
+                if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                    panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                    panel.player.setHasPotato((!panel.player.isHasPotato()));
+                }
+            }
+
+            if (panel.keyHandler.right) {
+                panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                    panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                }
+                if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                    panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                    panel.player.setHasPotato((!panel.player.isHasPotato()));
+                }
+            }
+            panel.player.changeForwardFrame();
+        } else if (panel.keyHandler.down) {
+            panel.map.y = panel.map.y - panel.map.speed;
+            if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                panel.map.y = panel.map.y + panel.map.speed + 1;
+            }
+            if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                panel.map.y = panel.map.y + panel.map.speed + 1;
+                panel.player.setHasPotato(!panel.player.isHasPotato());
+            }
+            if (panel.keyHandler.left) {
+                panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                    panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                }
+                if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                    panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                    panel.player.setHasPotato(!panel.player.isHasPotato());
+                }
+            }
+            if (panel.keyHandler.right) {
+                panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                    panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                }
+                if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                    panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+                    panel.player.setHasPotato(!panel.player.isHasPotato());
+                }
+            }
+            panel.player.changeBackwardFrame();
+        }
+        else if (panel.keyHandler.left) {
+            panel.map.x = panel.map.x + panel.map.speed;
+            if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                panel.map.x = panel.map.x - panel.map.speed - 1;
+            }
+            if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                panel.map.x = panel.map.x - panel.map.speed - 1;
+                panel.player.setHasPotato(!panel.player.isHasPotato());
+            }
+            panel.player.changeLeftFrame();
+        }
+        else if (panel.keyHandler.right) {
+            panel.map.x = panel.map.x - panel.map.speed;
+            if (!checkInMap(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54), panel.map.x, panel.map.y)) {
+                panel.map.x = panel.map.x + panel.map.speed + 1;
+            }
+            if (checkPlayerIntersects(new Rectangle(panel.player.getX() + 15, panel.player.getY() + 10, 34, 54))) {
+                panel.map.x = panel.map.x + panel.map.speed + 1;
+                panel.player.setHasPotato(!panel.player.isHasPotato());
+            }
+            panel.player.changeRightFrame();
+        }
+        if (panel.keyHandler.shift) {
+            panel.map.speed = 10;
+        }
+        if (!panel.keyHandler.shift) {
+            panel.map.speed = 4;
+        }
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void deadMovement(){
+        panel.player.imageFile = "sprites/nothing.png";
+        panel.player.image = loadImage("sprites/nothing.png");
+        if (panel.keyHandler.up) {
+            panel.map.y = panel.map.y + panel.map.speed;
+            if (panel.keyHandler.left) {
+                panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+            }
+            if (panel.keyHandler.right) {
+                panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+            }
+        } else if (panel.keyHandler.down) {
+            panel.map.y = panel.map.y - panel.map.speed;
+            if (panel.keyHandler.left) {
+                panel.map.x = panel.map.x + (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+            }
+            if (panel.keyHandler.right) {
+                panel.map.x = panel.map.x - (int) Math.sqrt((Math.pow(panel.map.speed, 2) / 2));
+            }
+        }
+        else if (panel.keyHandler.left) {
+            panel.map.x = panel.map.x + panel.map.speed;
+        }
+        else if (panel.keyHandler.right) {
+            panel.map.x = panel.map.x - panel.map.speed;
+        }
+        if (panel.keyHandler.shift) {
+            panel.map.speed = 10;
+        }
+        if (!panel.keyHandler.shift) {
+            panel.map.speed = 4;
+        }
     }
 
-    public int getX() {
-        return x;
+    public boolean checkInMap(Rectangle hitBox, int x, int y){
+        for (int row = 0; row < panel.map.tiles.length; row++) {
+            for (int col = 0; col < panel.map.tiles[0].length; col++) {
+                if (panel.map.tiles[row][col] instanceof Border) {
+                    panel.borderRectangles.add(new Rectangle(x + 64 * row, y + 64 * col, 64, 64));
+                }
+            }
+        }
+        for (Rectangle r : panel.borderRectangles) {
+            if (hitBox.intersects(r)) {
+                panel.borderRectangles.clear();
+                return false;
+            }
+        }
+        panel.borderRectangles.clear();
+        return true;
     }
 
-    public int getY() {
-        return y;
+    public boolean checkPlayerIntersects(Rectangle hitBox){
+        for (int i = 0; i < panel.otherPlayers.size(); i++) {
+            if (!panel.otherPlayers.get(i).isDead()) {
+                panel.otherPlayersHitBoxes.add(new Rectangle(panel.map.x - panel.otherPlayers.get(i).getX() + panel.player.getX() + 15, panel.map.y - panel.otherPlayers.get(i).getY() + panel.player.getY() + 10, 34, 54));
+            }
+        }
+        boolean contains = false;
+        for (Rectangle hitboxes : panel.otherPlayersHitBoxes){
+            if (hitboxes.intersects(hitBox)){
+                contains = true;
+            }
+        }
+        panel.otherPlayersHitBoxes.clear();
+        return contains;
     }
-
-    public boolean isHasPotato() {
-        return hasPotato;
-    }
-
-    public void setHasPotato(boolean hasPotato) {
-        this.hasPotato = hasPotato;
-    }
-
-    public boolean isDead() {
-        return isDead;
-    }
-
-    public void setDead(boolean dead) {
-        isDead = dead;
-    }
-
     public BufferedImage loadImage(String fileName) {
         try {
             BufferedImage image;
@@ -147,5 +299,45 @@ public class Player {
 
     public void setLeftImageNumber(int leftImageNumber) {
         this.leftImageNumber = leftImageNumber;
+    }
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public boolean isHasPotato() {
+        return hasPotato;
+    }
+
+    public void setHasPotato(boolean hasPotato) {
+        this.hasPotato = hasPotato;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 }

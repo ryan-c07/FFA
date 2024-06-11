@@ -8,9 +8,10 @@ public class OtherPlayers {
     private int y;
     private String username;
     private BufferedImage image;
-    private boolean hasPotato, isDead;
+    private boolean hasPotato, isDead, status;
 
-    public OtherPlayers(int x, int y, String image, String username){
+    public OtherPlayers(int x, int y, String image, String username, boolean status){
+        this.status = status;
         this.username = username;
         this.x = x;
         this.y = y;
@@ -23,6 +24,7 @@ public class OtherPlayers {
             return image;
         } catch (IOException e) {
             System.out.println(e);
+            System.out.println("test");
             return null;
         }
     }
@@ -69,5 +71,13 @@ public class OtherPlayers {
 
     public String getUsername() {
         return username;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }
